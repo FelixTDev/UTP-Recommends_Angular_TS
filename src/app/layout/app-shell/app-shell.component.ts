@@ -113,9 +113,8 @@ interface SidebarLink {
     /* Sidebar styles */
     .app-sidebar {
       width: 280px;
-      background: rgba(11, 19, 41, 0.95);
-      backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--utp-surface);
+      border-right: 1px solid var(--utp-border);
       display: flex;
       flex-direction: column;
       height: 100vh;
@@ -132,8 +131,8 @@ interface SidebarLink {
       font-weight: 700;
       display: flex;
       align-items: center;
-      color: #fff;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--utp-primary);
+      border-bottom: 1px solid var(--utp-border-soft);
     }
 
     .user-profile-summary {
@@ -141,20 +140,20 @@ interface SidebarLink {
       display: flex;
       align-items: center;
       gap: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--utp-border-soft);
     }
 
     .avatar-large {
       width: 50px;
       height: 50px;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 23, 68, 0.05);
+      border: 1px solid rgba(255, 23, 68, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
-      color: #818cf8;
+      color: var(--utp-primary);
     }
 
     .profile-info {
@@ -165,7 +164,7 @@ interface SidebarLink {
     .user-name {
       font-weight: 600;
       font-size: 0.95rem;
-      color: #fff;
+      color: var(--utp-text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -180,15 +179,15 @@ interface SidebarLink {
       font-size: 0.7rem;
       font-weight: 600;
       border-radius: 20px;
-      background: rgba(79, 70, 229, 0.15);
-      color: #a5b4fc;
-      border: 1px solid rgba(79, 70, 229, 0.3);
+      background: rgba(255, 23, 68, 0.08);
+      color: var(--utp-primary);
+      border: 1px solid rgba(255, 23, 68, 0.2);
     }
 
     .user-role-badge.admin {
-      background: rgba(245, 158, 11, 0.15);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: rgba(217, 119, 6, 0.1);
+      color: var(--utp-warning);
+      border: 1px solid rgba(217, 119, 6, 0.2);
     }
 
     .sidebar-nav {
@@ -205,7 +204,7 @@ interface SidebarLink {
       align-items: center;
       gap: 12px;
       padding: 12px 16px;
-      color: #94a3b8;
+      color: var(--utp-text-secondary);
       text-decoration: none;
       border-radius: 10px;
       font-weight: 500;
@@ -218,32 +217,32 @@ interface SidebarLink {
     }
 
     .nav-link-item:hover {
-      background: rgba(255, 255, 255, 0.03);
-      color: #fff;
+      background: var(--utp-surface-soft);
+      color: var(--utp-text);
     }
 
     .nav-link-item.active {
-      background: rgba(79, 70, 229, 0.15);
-      color: #a5b4fc;
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      background: rgba(255, 23, 68, 0.08);
+      color: var(--utp-primary);
+      border: 1px solid rgba(255, 23, 68, 0.15);
     }
 
     .nav-divider {
       height: 1px;
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--utp-border-soft);
       margin: 12px 0;
     }
 
     .sidebar-footer {
       padding: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-top: 1px solid var(--utp-border-soft);
     }
 
     .logout-btn {
       width: 100%;
-      background: rgba(239, 68, 68, 0.1);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      background: transparent;
+      color: var(--utp-primary);
+      border: 1px solid var(--utp-primary);
       border-radius: 10px;
       padding: 12px;
       display: flex;
@@ -256,7 +255,7 @@ interface SidebarLink {
     }
 
     .logout-btn:hover {
-      background: rgba(239, 68, 68, 0.2);
+      background: var(--utp-primary);
       color: #fff;
     }
 
@@ -273,9 +272,8 @@ interface SidebarLink {
     /* Header styles */
     .desktop-header {
       height: 72px;
-      background: rgba(11, 19, 41, 0.6);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: var(--utp-surface);
+      border-bottom: 1px solid var(--utp-border);
       padding: 0 32px;
       align-items: center;
       justify-content: space-between;
@@ -287,7 +285,7 @@ interface SidebarLink {
     .active-breadcrumb {
       font-weight: 600;
       font-size: 1.15rem;
-      color: #fff;
+      color: var(--utp-text);
     }
 
     .header-user-menu {
@@ -296,20 +294,20 @@ interface SidebarLink {
     }
 
     .profile-link-btn {
-      color: #a5b4fc;
+      color: var(--utp-primary);
       text-decoration: none;
       font-size: 0.9rem;
       font-weight: 500;
       padding: 6px 12px;
       border-radius: 8px;
-      background: rgba(79, 70, 229, 0.1);
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      background: rgba(255, 23, 68, 0.05);
+      border: 1px solid rgba(255, 23, 68, 0.1);
       transition: all 0.2s ease;
     }
 
     .profile-link-btn:hover {
-      background: rgba(79, 70, 229, 0.2);
-      color: #fff;
+      background: rgba(255, 23, 68, 0.1);
+      color: var(--utp-primary-dark);
     }
 
     .header-user-info {
@@ -322,18 +320,18 @@ interface SidebarLink {
     .header-user-info .name {
       font-weight: 500;
       font-size: 0.9rem;
-      color: #fff;
+      color: var(--utp-text);
     }
 
     .header-user-info .role {
       font-size: 0.75rem;
-      color: var(--text-secondary);
+      color: var(--utp-text-secondary);
     }
 
     .icon-logout-btn {
       background: none;
       border: none;
-      color: var(--text-secondary);
+      color: var(--utp-text-secondary);
       font-size: 1.4rem;
       cursor: pointer;
       display: flex;
@@ -345,8 +343,8 @@ interface SidebarLink {
     }
 
     .icon-logout-btn:hover {
-      background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
+      background: rgba(255, 23, 68, 0.05);
+      color: var(--utp-primary);
     }
 
     /* Content Container */
@@ -358,9 +356,8 @@ interface SidebarLink {
     /* Responsive styling */
     .mobile-header {
       height: 64px;
-      background: rgba(11, 19, 41, 0.9);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: var(--utp-surface);
+      border-bottom: 1px solid var(--utp-border);
       position: fixed;
       top: 0;
       left: 0;
@@ -375,7 +372,7 @@ interface SidebarLink {
     .menu-toggle {
       background: none;
       border: none;
-      color: #fff;
+      color: var(--utp-text);
       font-size: 1.5rem;
       cursor: pointer;
     }
@@ -383,12 +380,12 @@ interface SidebarLink {
     .brand-title {
       font-weight: 700;
       font-size: 1.1rem;
-      color: #fff;
+      color: var(--utp-text);
     }
 
     .user-avatar {
       font-size: 1.5rem;
-      color: #a5b4fc;
+      color: var(--utp-primary);
       cursor: pointer;
     }
 

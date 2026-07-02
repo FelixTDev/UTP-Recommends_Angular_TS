@@ -120,15 +120,15 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
       font-size: 1.5rem;
       margin-bottom: 12px;
     }
-    .bg-primary-opacity { background: rgba(79, 70, 229, 0.1); }
-    .bg-success-opacity { background: rgba(16, 185, 129, 0.1); }
-    .bg-warning-opacity { background: rgba(245, 158, 11, 0.1); }
-    .bg-info-opacity { background: rgba(14, 165, 233, 0.1); }
-    .bg-purple-opacity { background: rgba(168, 85, 247, 0.1); }
-    .bg-secondary-opacity { background: rgba(255, 255, 255, 0.05); }
+    .bg-primary-opacity { background: rgba(255, 23, 68, 0.08); }
+    .bg-success-opacity { background: rgba(5, 150, 105, 0.08); }
+    .bg-warning-opacity { background: rgba(217, 119, 6, 0.08); }
+    .bg-info-opacity { background: rgba(2, 132, 199, 0.08); }
+    .bg-purple-opacity { background: rgba(168, 85, 247, 0.08); }
+    .bg-secondary-opacity { background: rgba(107, 114, 128, 0.08); }
     
-    .text-primary-color { color: var(--primary-color); }
-    .text-purple { color: #c084fc; }
+    .text-primary-color { color: var(--utp-primary); }
+    .text-purple { color: #7c3aed; }
 
     .metric-val {
       font-size: 2.25rem;

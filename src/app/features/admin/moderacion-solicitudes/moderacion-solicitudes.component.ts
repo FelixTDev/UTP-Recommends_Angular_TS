@@ -39,7 +39,7 @@ import { FormsModule } from '@angular/forms';
         <div class="col-md-5 text-md-end">
           <div class="d-inline-flex align-items-center bg-dark-opacity px-3 py-1.5 rounded border border-white-05">
             <label class="me-2 small text-muted-custom">Filtro Estado:</label>
-            <select class="bg-transparent border-0 text-white small" [(ngModel)]="filterEstado" (change)="loadQueue()">
+            <select class="bg-transparent border-0 text-dark small" [(ngModel)]="filterEstado" (change)="loadQueue()">
               <option value="PENDIENTE">Pendientes únicamente</option>
               <option value="APROBADA">Aprobadas</option>
               <option value="RECHAZADA">Rechazadas</option>
@@ -263,22 +263,22 @@ import { FormsModule } from '@angular/forms';
   `,
   styles: [`
     .moderacion-solicitudes {
-      color: var(--text-primary);
+      color: var(--utp-text);
     }
     .bg-dark-opacity {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--utp-surface-soft);
     }
     .bg-black-opacity {
-      background: rgba(0, 0, 0, 0.4);
+      background: var(--utp-border-soft);
     }
     .border-white-05 {
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--utp-border);
     }
     .comment-text {
       line-height: 1.5;
     }
     .text-red {
-      color: #f87171;
+      color: var(--utp-danger);
     }
     .font-size-lg {
       font-size: 1.1rem;

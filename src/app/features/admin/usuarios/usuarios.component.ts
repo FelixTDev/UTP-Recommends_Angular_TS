@@ -21,7 +21,7 @@ import { StatusBadgePipe } from '../../../shared/pipes/status-badge.pipe';
         <div class="col-md-6 d-flex flex-wrap gap-2 justify-content-md-end">
           <div class="d-flex align-items-center bg-dark-opacity px-3 py-1.5 rounded border border-white-05">
             <label class="me-2 small text-muted-custom">Rol:</label>
-            <select class="bg-transparent border-0 text-white small" [(ngModel)]="filterRol" (change)="loadUsuarios()">
+            <select class="bg-transparent border-0 text-dark small" [(ngModel)]="filterRol" (change)="loadUsuarios()">
               <option value="">Todos</option>
               <option value="ADMIN">ADMIN</option>
               <option value="ESTUDIANTE">ESTUDIANTE</option>
@@ -30,7 +30,7 @@ import { StatusBadgePipe } from '../../../shared/pipes/status-badge.pipe';
 
           <div class="d-flex align-items-center bg-dark-opacity px-3 py-1.5 rounded border border-white-05">
             <label class="me-2 small text-muted-custom">Estado:</label>
-            <select class="bg-transparent border-0 text-white small" [(ngModel)]="filterEstado" (change)="loadUsuarios()">
+            <select class="bg-transparent border-0 text-dark small" [(ngModel)]="filterEstado" (change)="loadUsuarios()">
               <option value="">Todos</option>
               <option value="ACTIVO">ACTIVO</option>
               <option value="INACTIVO">INACTIVO</option>
@@ -233,13 +233,13 @@ import { StatusBadgePipe } from '../../../shared/pipes/status-badge.pipe';
   `,
   styles: [`
     .admin-usuarios {
-      color: var(--text-primary);
+      color: var(--utp-text);
     }
     .bg-dark-opacity {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--utp-surface-soft);
     }
     .border-white-05 {
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--utp-border);
     }
   `]
 })

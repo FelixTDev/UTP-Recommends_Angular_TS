@@ -4,20 +4,41 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 :root {
-  --primary-color: #4f46e5;      /* Indigo */
-  --primary-hover: #4338ca;
-  --accent-color: #f59e0b;       /* Gold/Amber */
-  --bg-gradient: radial-gradient(circle at top right, #0f172a, #020617);
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-bg-hover: rgba(15, 23, 42, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-focus: rgba(79, 70, 229, 0.4);
-  --glass-blur: blur(20px);
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --transition-speed: 0.3s;
+  /* UTP Red & Light Premium Palette */
+  --utp-primary: #FF1744;
+  --utp-primary-dark: #D50032;
+  --utp-text: #0B0B0F;
+  --utp-text-secondary: #6B7280;
+  --utp-text-muted: #9CA3AF;
+  --utp-bg: #F6F7FB;
+  --utp-surface: #FFFFFF;
+  --utp-surface-soft: #FAFAFB;
+  --utp-border: #E5E7EB;
+  --utp-border-soft: #F3F4F6;
+
+  /* States */
+  --utp-success: #059669;
+  --utp-warning: #D97706;
+  --utp-danger: #DC2626;
+  --utp-info: #0284C7;
+
+  /* Legacy mappings for template compatibility (Light Theme Redefinition) */
+  --primary-color: var(--utp-primary);
+  --primary-hover: var(--utp-primary-dark);
+  --accent-color: var(--utp-warning);
+  --bg-gradient: var(--utp-bg);
+  
+  --glass-bg: var(--utp-surface);
+  --glass-bg-hover: var(--utp-surface-soft);
+  --glass-border: var(--utp-border);
+  --glass-border-focus: rgba(255, 23, 68, 0.4);
+  --glass-blur: none;
+  
+  --text-primary: var(--utp-text);
+  --text-secondary: var(--utp-text-secondary);
+  --text-muted: var(--utp-text-muted);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --transition-speed: 0.25s;
 }
 
 /* Global Reset */
@@ -25,9 +46,9 @@ html, body {
   height: 100%;
   margin: 0;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg-gradient);
+  background: var(--utp-bg);
   background-attachment: fixed;
-  color: var(--text-primary);
+  color: var(--utp-text);
   overflow-x: hidden;
 }
 
@@ -37,54 +58,53 @@ html, body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: var(--utp-surface-soft);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(79, 70, 229, 0.3);
+  background: rgba(255, 23, 68, 0.2);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(79, 70, 229, 0.6);
+  background: rgba(255, 23, 68, 0.4);
 }
 
-/* Angular Material overrides for Dark Glassmorphism */
+/* Angular Material overrides for Snack Bar */
 .mat-mdc-snack-bar-container {
-  border-radius: 12px !important;
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  border-radius: 8px !important;
+  border: 1px solid var(--utp-border) !important;
+  box-shadow: var(--card-shadow) !important;
 }
 .toast-success .mdc-snackbar__surface {
-  background-color: rgba(16, 185, 129, 0.95) !important; /* Green */
+  background-color: var(--utp-success) !important;
   color: #fff !important;
 }
 .toast-error .mdc-snackbar__surface {
-  background-color: rgba(239, 68, 68, 0.95) !important; /* Red */
+  background-color: var(--utp-danger) !important;
   color: #fff !important;
 }
 .toast-info .mdc-snackbar__surface {
-  background-color: rgba(79, 70, 229, 0.95) !important; /* Indigo */
+  background-color: var(--utp-info) !important;
   color: #fff !important;
 }
 .mdc-snackbar__actions button {
   color: #fff !important;
 }
 
-/* Glassmorphism Classes */
+/* Premium Light Card Classes (Maintained names for template compatibility) */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  background: var(--utp-surface);
+  border: 1px solid var(--utp-border);
+  border-radius: 12px;
   padding: 24px;
   box-shadow: var(--card-shadow);
-  transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1), 
+  transition: transform var(--transition-speed) ease, 
               border-color var(--transition-speed) ease, 
               box-shadow var(--transition-speed) ease;
 }
 .glass-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(79, 70, 229, 0.25);
-  box-shadow: 0 12px 40px 0 rgba(79, 70, 229, 0.15);
+  transform: translateY(-2px);
+  border-color: rgba(255, 23, 68, 0.2);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
 }
 
 /* Premium Form Elements */
@@ -95,28 +115,28 @@ html, body {
   display: block;
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--utp-text-secondary);
   margin-bottom: 8px;
 }
 .glass-input {
   width: 100%;
   padding: 12px 16px;
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  color: var(--text-primary);
+  background: var(--utp-surface-soft);
+  border: 1px solid var(--utp-border);
+  border-radius: 8px;
+  color: var(--utp-text);
   font-size: 0.95rem;
   transition: all var(--transition-speed) ease;
   font-family: inherit;
 }
 .glass-input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--glass-border-focus);
-  background: rgba(15, 23, 42, 0.6);
+  border-color: var(--utp-primary);
+  box-shadow: 0 0 0 3px rgba(255, 23, 68, 0.15);
+  background: var(--utp-surface);
 }
 .glass-input::placeholder {
-  color: var(--text-muted);
+  color: var(--utp-text-muted);
 }
 .glass-input:disabled {
   opacity: 0.5;
@@ -127,27 +147,27 @@ html, body {
 .invalid-feedback {
   display: block;
   font-size: 0.82rem;
-  color: #ef4444;
+  color: var(--utp-danger);
   margin-top: 6px;
 }
 
-/* Custom Buttons */
+/* Custom Buttons (Red UTP Primary Theme) */
 .btn-primary-glass {
-  background: var(--primary-color);
-  color: #fff;
+  background: var(--utp-primary);
+  color: #fff !important;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 12px 24px;
   font-weight: 500;
   font-size: 0.95rem;
   cursor: pointer;
   transition: all var(--transition-speed) ease;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 2px 4px rgba(255, 23, 68, 0.15);
 }
 .btn-primary-glass:hover:not(:disabled) {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+  background: var(--utp-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(255, 23, 68, 0.25);
 }
 .btn-primary-glass:disabled {
   opacity: 0.6;
@@ -155,10 +175,10 @@ html, body {
 }
 
 .btn-secondary-glass {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
+  background: var(--utp-surface-soft);
+  color: var(--utp-text);
+  border: 1px solid var(--utp-border);
+  border-radius: 8px;
   padding: 12px 24px;
   font-weight: 500;
   font-size: 0.95rem;
@@ -166,8 +186,8 @@ html, body {
   transition: all var(--transition-speed) ease;
 }
 .btn-secondary-glass:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--utp-border-soft);
+  border-color: var(--utp-border);
 }
 
 /* Badges styling */
@@ -181,108 +201,140 @@ html, body {
   border-radius: 20px;
 }
 .badge-success {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--utp-success);
+  border: 1px solid rgba(5, 150, 105, 0.2);
 }
 .badge-warning {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--utp-warning);
+  border: 1px solid rgba(217, 119, 6, 0.2);
 }
 .badge-danger {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--utp-danger);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 .badge-info {
-  background: rgba(14, 165, 233, 0.15);
-  color: #38bdf8;
-  border: 1px solid rgba(14, 165, 233, 0.3);
+  background: rgba(2, 132, 199, 0.1);
+  color: var(--utp-info);
+  border: 1px solid rgba(2, 132, 199, 0.2);
 }
 .badge-primary {
-  background: rgba(79, 70, 229, 0.15);
-  color: #818cf8;
-  border: 1px solid rgba(79, 70, 229, 0.3);
+  background: rgba(255, 23, 68, 0.08);
+  color: var(--utp-primary);
+  border: 1px solid rgba(255, 23, 68, 0.2);
 }
 .badge-purple {
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  background: rgba(168, 85, 247, 0.1);
+  color: #7c3aed;
+  border: 1px solid rgba(168, 85, 247, 0.2);
 }
 .badge-gray {
-  background: rgba(148, 163, 184, 0.15);
-  color: #cbd5e1;
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(107, 114, 128, 0.1);
+  color: var(--utp-text-secondary);
+  border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
-/* Glassmorphic Table */
+/* Premium Light Table */
 .glass-table-container {
   overflow-x: auto;
-  border-radius: 12px;
-  border: 1px solid var(--glass-border);
-  background: var(--glass-bg);
+  border-radius: 8px;
+  border: 1px solid var(--utp-border);
+  background: var(--utp-surface);
 }
 .glass-table {
   width: 100%;
   border-collapse: collapse;
-  color: var(--text-primary);
+  color: var(--utp-text);
 }
 .glass-table th {
-  background: rgba(15, 23, 42, 0.8);
+  background: var(--utp-surface-soft);
   padding: 16px;
   font-weight: 600;
   text-align: left;
   font-size: 0.9rem;
-  color: var(--text-secondary);
-  border-bottom: 2px solid var(--glass-border);
+  color: var(--utp-text-secondary);
+  border-bottom: 2px solid var(--utp-border);
 }
 .glass-table td {
   padding: 16px;
   font-size: 0.9rem;
-  border-bottom: 1px solid var(--glass-border);
-  color: var(--text-primary);
+  border-bottom: 1px solid var(--utp-border-soft);
+  color: var(--utp-text);
 }
 .glass-table tbody tr {
-  transition: background-color 0.2s ease;
+  transition: background-color 0.15s ease;
 }
 .glass-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--utp-surface-soft);
 }
 
-/* Material Dialog Premium override */
+/* Material Dialog Premium Light Theme */
 .cdk-overlay-pane {
   max-width: 90vw !important;
 }
 .mat-mdc-dialog-container .mdc-dialog__surface {
-  background: #0b1329 !important;
-  border: 1px solid var(--glass-border) !important;
-  border-radius: 16px !important;
+  background: var(--utp-surface) !important;
+  border: 1px solid var(--utp-border) !important;
+  border-radius: 12px !important;
   box-shadow: var(--card-shadow) !important;
   padding: 24px !important;
-  color: var(--text-primary) !important;
+  color: var(--utp-text) !important;
 }
 .mat-mdc-dialog-title {
-  color: #fff !important;
+  color: var(--utp-text) !important;
   font-family: 'Outfit', sans-serif !important;
   font-size: 1.5rem !important;
   font-weight: 600 !important;
 }
 .mat-mdc-dialog-content {
-  color: var(--text-secondary) !important;
+  color: var(--utp-text-secondary) !important;
   font-size: 0.95rem !important;
   line-height: 1.6 !important;
 }
 
 /* Typography styles */
 .text-gradient {
-  background: linear-gradient(135deg, #a5b4fc, #6366f1);
+  background: linear-gradient(135deg, var(--utp-primary), #b30026);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-weight: 700;
 }
 .text-gold {
-  color: var(--accent-color);
+  color: var(--utp-warning);
 }
 .text-muted-custom {
-  color: var(--text-secondary);
+  color: var(--utp-text-secondary);
+}
+
+/* Controlled overrides of text-white inside light layout containers to avoid text disappearing */
+.main-layout .text-white:not(.btn):not(.badge-badge),
+.public-landing .text-white:not(.btn):not(.badge-badge),
+.cdk-overlay-container .text-white:not(.btn):not(.badge-badge) {
+  color: var(--utp-text) !important;
+}
+
+.main-layout h1.text-white,
+.main-layout h2.text-white,
+.main-layout h3.text-white,
+.main-layout h4.text-white,
+.main-layout h5.text-white,
+.main-layout h6.text-white,
+.main-layout strong.text-white,
+.public-landing h1.text-white,
+.public-landing h2.text-white,
+.public-landing h3.text-white,
+.public-landing h4.text-white,
+.public-landing h5.text-white,
+.public-landing h6.text-white,
+.public-landing strong.text-white,
+.cdk-overlay-container h1.text-white,
+.cdk-overlay-container h2.text-white,
+.cdk-overlay-container h3.text-white,
+.cdk-overlay-container h4.text-white,
+.cdk-overlay-container h5.text-white,
+.cdk-overlay-container h6.text-white,
+.cdk-overlay-container strong.text-white {
+  color: var(--utp-text) !important;
 }
