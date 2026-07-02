@@ -77,8 +77,8 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
                   <a routerLink="/estudiante/resenas/nueva" class="text-gold d-block mt-2 text-decoration-none">Escribe tu primera reseña</a>
                 </div>
               } @else {
-                <div class="table-responsive">
-                  <table class="table table-dark table-hover border-0 m-0 align-middle">
+                <div class="glass-table-container">
+                  <table class="glass-table m-0 align-middle">
                     <thead>
                       <tr class="text-muted-custom font-size-sm">
                         <th>Curso</th>
@@ -121,8 +121,8 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
                   <a routerLink="/estudiante/solicitudes/nueva" class="text-gold d-block mt-2 text-decoration-none">Enviar una solicitud</a>
                 </div>
               } @else {
-                <div class="table-responsive">
-                  <table class="table table-dark table-hover border-0 m-0 align-middle">
+                <div class="glass-table-container">
+                  <table class="glass-table m-0 align-middle">
                     <thead>
                       <tr class="text-muted-custom font-size-sm">
                         <th>Tipo</th>
@@ -156,7 +156,7 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
   `,
   styles: [`
     .student-dashboard {
-      color: var(--text-primary);
+      color: var(--utp-text);
     }
     .metric-card {
       display: flex;
@@ -175,11 +175,11 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
       font-size: 1.5rem;
       margin-bottom: 12px;
     }
-    .bg-primary-opacity { background: rgba(79, 70, 229, 0.1); }
-    .bg-success-opacity { background: rgba(16, 185, 129, 0.1); }
-    .bg-warning-opacity { background: rgba(245, 158, 11, 0.1); }
-    .bg-info-opacity { background: rgba(14, 165, 233, 0.1); }
-    .text-primary-color { color: var(--primary-color); }
+    .bg-primary-opacity { background: rgba(255, 23, 68, 0.08); }
+    .bg-success-opacity { background: rgba(5, 150, 105, 0.08); }
+    .bg-warning-opacity { background: rgba(217, 119, 6, 0.08); }
+    .bg-info-opacity { background: rgba(2, 132, 199, 0.08); }
+    .text-primary-color { color: var(--utp-primary); }
     
     .metric-val {
       font-size: 2.25rem;
@@ -189,20 +189,8 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
     }
     .metric-label {
       font-size: 0.85rem;
-      color: var(--text-secondary);
+      color: var(--utp-text-secondary);
       font-weight: 500;
-    }
-    .table {
-      background: transparent !important;
-    }
-    .table th, .table td {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      background: transparent !important;
-      padding: 12px 8px;
-    }
-    .table th {
-      font-weight: 600;
-      color: var(--text-secondary);
     }
     .font-size-sm {
       font-size: 0.8rem;

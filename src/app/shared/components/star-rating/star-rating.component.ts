@@ -47,7 +47,7 @@ import { CommonModule } from '@angular/common';
     .rating-value {
       font-size: 0.9rem;
       font-weight: 600;
-      color: #6c757d;
+      color: var(--utp-text-secondary);
       margin-left: 8px;
     }
   `]

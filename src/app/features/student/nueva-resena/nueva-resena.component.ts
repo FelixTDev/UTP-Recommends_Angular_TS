@@ -198,7 +198,7 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
   `,
   styles: [`
     .nueva-resena {
-      color: var(--text-primary);
+      color: var(--utp-text);
     }
     .autocomplete-dropdown {
       position: absolute;
@@ -208,42 +208,43 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
       z-index: 1000;
       max-height: 250px;
       overflow-y: auto;
-      background: rgba(11, 19, 41, 0.95);
-      border: 1px solid var(--glass-border);
+      background: var(--utp-surface);
+      border: 1px solid var(--utp-border);
       border-radius: 8px;
+      box-shadow: var(--card-shadow);
     }
     .dropdown-item-custom {
       padding: 12px 16px;
       cursor: pointer;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--utp-border-soft);
       transition: background-color 0.2s ease;
     }
     .dropdown-item-custom:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--utp-surface-soft);
     }
     .selected-option-tag {
-      background: rgba(79, 70, 229, 0.1);
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      background: rgba(255, 23, 68, 0.05);
+      border: 1px solid rgba(255, 23, 68, 0.15);
     }
     .btn-remove {
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--utp-text-secondary);
       font-size: 1.3rem;
       cursor: pointer;
       padding: 0;
     }
     .btn-remove:hover {
-      color: #ef4444;
+      color: var(--utp-primary);
     }
     .bg-danger-opacity {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(220, 38, 38, 0.1);
     }
     .text-red {
-      color: #f87171;
+      color: var(--utp-danger);
     }
     .criteria-rating-row {
-      background: rgba(255, 255, 255, 0.02) !important;
+      background: var(--utp-surface-soft) !important;
     }
   `]
 })

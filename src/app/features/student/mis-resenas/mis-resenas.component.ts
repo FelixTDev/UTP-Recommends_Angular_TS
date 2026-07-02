@@ -134,7 +134,7 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
   `,
   styles: [`
     .mis-resenas {
-      color: var(--text-primary);
+      color: var(--utp-text);
     }
     .review-row-card {
       transition: transform 0.2s ease;
@@ -147,10 +147,10 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
       line-height: 1.5;
     }
     .bg-dark-opacity {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--utp-surface-soft);
     }
     .ratings-mini-grid {
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--utp-border);
     }
     .rating-mini-item {
       font-size: 0.85rem;
@@ -159,10 +159,10 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
       font-size: 0.75rem;
     }
     .bg-danger-opacity {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(220, 38, 38, 0.1);
     }
     .text-red {
-      color: #f87171;
+      color: var(--utp-danger);
     }
   `]
 })

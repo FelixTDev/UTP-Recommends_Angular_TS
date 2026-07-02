@@ -118,7 +118,7 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
   `,
   styles: [`
     .mis-solicitudes {
-      color: var(--text-primary);
+      color: var(--utp-text);
     }
     .sol-row-card {
       transition: transform 0.2s ease;
@@ -127,16 +127,16 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
       transform: scale(1.005);
     }
     .bg-dark-opacity {
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--utp-surface-soft);
     }
     .comment-text {
       line-height: 1.5;
     }
     .bg-danger-opacity {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(220, 38, 38, 0.1);
     }
     .text-red {
-      color: #f87171;
+      color: var(--utp-danger);
     }
   `]
 })
