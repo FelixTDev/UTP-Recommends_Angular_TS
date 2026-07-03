@@ -16,7 +16,7 @@ import { CarreraResponse } from '../../../core/models/admin.models';
       <div class="auth-card glass-card">
         <div class="text-center mb-4">
           <i class="bi bi-star-fill text-gold fs-1 mb-2 d-inline-block"></i>
-          <h2 class="fw-bold text-white">Crear Cuenta</h2>
+          <h2 class="fw-bold auth-title">Crear Cuenta</h2>
           <p class="text-muted-custom">Estudiante UTP</p>
         </div>
 
@@ -150,6 +150,9 @@ import { CarreraResponse } from '../../../core/models/admin.models';
       width: 100%;
       max-width: 500px;
       padding: 40px 30px;
+    }
+    .auth-title {
+      color: #1f2937;
     }
   `]
 })

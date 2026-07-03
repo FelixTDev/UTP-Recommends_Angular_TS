@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StudentService } from '../../../core/services/student.service';
 import { PublicService } from '../../../core/services/public.service';
@@ -36,35 +36,34 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
         <div class="col-lg-8">
           <div class="glass-card">
             <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
-              
               <!-- Search Course-Teacher Assignment -->
               <div class="glass-form-group position-relative">
                 <label class="glass-form-label">Asignación Curso - Docente</label>
-                
+
                 @if (isResubmission()) {
-                  <input 
-                    type="text" 
-                    class="glass-input" 
-                    [value]="selectedOptionName()" 
-                    disabled 
+                  <input
+                    type="text"
+                    class="glass-input"
+                    [value]="selectedOptionName()"
+                    disabled
                   />
                   <small class="text-muted-custom mt-1 d-block">No se puede cambiar el curso-docente en un reenvío.</small>
                 } @else {
-                  <input 
-                    type="text" 
-                    class="glass-input" 
+                  <input
+                    type="text"
+                    class="glass-input"
                     placeholder="Escribe para buscar... (ej: Cálculo, Gómez)"
                     formControlName="searchText"
                     (input)="onSearchInput($event)"
                     (focus)="showDropdown.set(true)"
                   />
-                  
+
                   <!-- Autocomplete Dropdown -->
                   @if (showDropdown() && searchOptions().length > 0) {
                     <div class="autocomplete-dropdown glass-card p-0">
                       @for (opt of searchOptions(); track opt.idCursoDocente) {
-                        <div 
-                          class="dropdown-item-custom" 
+                        <div
+                          class="dropdown-item-custom"
                           (click)="selectOption(opt)"
                         >
                           <div class="fw-bold text-white">{{ opt.nombreDocente }}</div>
@@ -73,7 +72,7 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
                       }
                     </div>
                   }
-                  
+
                   @if (selectedOption()) {
                     <div class="selected-option-tag mt-3 p-3 rounded d-flex justify-content-between align-items-center">
                       <div>
@@ -99,7 +98,7 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
               <!-- Ratings List -->
               <div class="mb-4">
                 <h3 class="h6 fw-bold text-white mb-3">Calificaciones por Criterio (Obligatorios)</h3>
-                
+
                 @if (activeCriteria().length === 0) {
                   <p class="text-muted-custom small">Cargando criterios de calificación...</p>
                 } @else {
@@ -113,7 +112,7 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
                           }
                         </div>
                         <div class="mt-3 mt-sm-0">
-                          <app-star-rating 
+                          <app-star-rating
                             [value]="getStarValue(i)"
                             (valueChange)="setStarValue(i, $event)"
                             [showValue]="true"
@@ -131,9 +130,9 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
               <!-- Comment Input -->
               <div class="glass-form-group">
                 <label class="glass-form-label">Comentario Descriptivo</label>
-                <textarea 
-                  class="glass-input" 
-                  rows="5" 
+                <textarea
+                  class="glass-input"
+                  rows="5"
                   placeholder="Detalla tu experiencia con este docente en este curso específico. Sé respetuoso y constructivo..."
                   formControlName="comentario"
                   [class.is-invalid]="submitted() && f['comentario'].errors"
@@ -148,9 +147,9 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
 
               <!-- Anonimato Checkbox -->
               <div class="glass-form-group form-check mb-4">
-                <input 
-                  type="checkbox" 
-                  class="form-check-input" 
+                <input
+                  type="checkbox"
+                  class="form-check-input"
                   id="esAnonimo"
                   formControlName="esAnonimo"
                 />
@@ -165,8 +164,8 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
               <!-- Submit Buttons -->
               <div class="text-end">
                 <a routerLink="/estudiante/resenas/mis-resenas" class="btn-secondary-glass me-2 text-decoration-none">Cancelar</a>
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   class="btn-primary-glass"
                   [disabled]="isLoading()"
                 >
@@ -177,7 +176,6 @@ import { StarRatingComponent } from '../../../shared/components/star-rating/star
                   }
                 </button>
               </div>
-
             </form>
           </div>
         </div>
@@ -263,14 +261,14 @@ export class NuevaResenaComponent implements OnInit {
     ratings: this.fb.array([])
   });
 
-  // Signals for state
   readonly activeCriteria = signal<CriterioResponse[]>([]);
   readonly searchOptions = signal<ActiveCourseTeacherOptionResponse[]>([]);
   readonly selectedOption = signal<ActiveCourseTeacherOptionResponse | null>(null);
   readonly selectedOptionName = signal<string>('');
-  
+
   readonly isResubmission = signal<boolean>(false);
   readonly rejectedId = signal<number | null>(null);
+  readonly rejectedCursoDocenteId = signal<number | null>(null);
   readonly rejectedReason = signal<string | null>(null);
 
   readonly showDropdown = signal<boolean>(false);
@@ -281,7 +279,6 @@ export class NuevaResenaComponent implements OnInit {
   get ratingsFormArray() { return this.reviewForm.controls.ratings as FormArray; }
 
   ngOnInit(): void {
-    // 1. Fetch criteria first, then check route parameters
     this.loadCriteria(() => {
       this.checkQueryParams();
     });
@@ -291,10 +288,8 @@ export class NuevaResenaComponent implements OnInit {
     this.publicService.listarCriteriosActivos().subscribe({
       next: (res) => {
         this.activeCriteria.set(res);
-        // Clear previous if any
         this.ratingsFormArray.clear();
-        
-        // Add a form control for each criterion
+
         res.forEach(() => {
           this.ratingsFormArray.push(new FormControl('', [Validators.required, Validators.min(1), Validators.max(5)]));
         });
@@ -318,16 +313,15 @@ export class NuevaResenaComponent implements OnInit {
   loadRejectedReview(id: number): void {
     this.studentService.obtenerMiResena(id).subscribe({
       next: (res) => {
-        // Pre-fill comment and anonymous checkbox
         this.reviewForm.patchValue({
           comentario: res.comentario,
           esAnonimo: res.esAnonimo
         });
-        
+
         this.selectedOptionName.set(`${res.docente} | ${res.curso}`);
+        this.rejectedCursoDocenteId.set(res.cursoDocenteId);
         this.rejectedReason.set(res.motivoRechazo || 'Rechazado por el moderador.');
-        
-        // Pre-fill ratings matching active criteria IDs
+
         res.calificaciones.forEach((cal) => {
           const critIndex = this.activeCriteria().findIndex(c => c.id === cal.criterioId);
           if (critIndex !== -1) {
@@ -381,82 +375,49 @@ export class NuevaResenaComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted.set(true);
-    
-    // Check if we selected the option (when not resubmitting)
+
     if (!this.isResubmission() && !this.selectedOption()) return;
     if (this.reviewForm.invalid) return;
 
     this.isLoading.set(true);
 
-    // Build calificaciones array payload
-    const calificacionesPayload: CriterioPuntajeRequest[] = this.activeCriteria().map((crit, idx) => {
-      return {
-        criterioId: crit.id,
-        puntaje: Number(this.ratingsFormArray.at(idx).value)
-      };
-    });
+    const calificacionesPayload: CriterioPuntajeRequest[] = this.activeCriteria().map((crit, idx) => ({
+      criterioId: crit.id,
+      puntaje: Number(this.ratingsFormArray.at(idx).value)
+    }));
 
-    // In a resubmission, the backend extracts the cursoDocenteId from the database entry of the rejected review or we must supply the original one.
-    // Wait! Let's check 02-logica-negocio-backend.md:
-    // "Si la última reseña de esa combinación está RECHAZADA (no hay ninguna activa) → es un reenvío: se crea una fila nueva con version = anterior.version + 1 y resena_anterior_id = anterior.id, estado PENDIENTE."
-    // And in the DB schema, `resena.estudiante_id` + `resena.curso_docente_id` uniquely maps. The controller is `POST /api/estudiante/resenas` consuming `ResenaCreateRequest` which has `cursoDocenteId`.
-    // So even in resubmissions, we MUST send the `cursoDocenteId` in the body!
-    // Since we loaded the rejected review, where do we get the original `cursoDocenteId`?
-    // It's in `resena.cursoDocenteId` of the loaded rejected review!
-    
-    let targetCdId = 0;
-    if (this.isResubmission()) {
-      // In resubmission we get it from query / loaded data
-      // Let's make sure we have a reference to the loaded ID
-      // We can fetch it from our active rejected review reference or store it.
-      // Wait, let's look at ResenaResponse: it contains `cursoDocenteId`.
-      // Let's store it!
-    } else {
-      targetCdId = this.selectedOption()?.idCursoDocente || 0;
+    const targetCdId = this.isResubmission()
+      ? this.rejectedCursoDocenteId()
+      : (this.selectedOption()?.idCursoDocente || null);
+
+    if (!targetCdId) {
+      this.isLoading.set(false);
+      this.uiService.showError(
+        this.isResubmission()
+          ? 'No se pudo verificar el curso-docente original.'
+          : 'Debes seleccionar una asignación curso-docente válida.'
+      );
+      return;
     }
 
-    // Let's fetch it from our stored state
-    this.studentService.obtenerMiResena(this.rejectedId() || 0).subscribe({
-      next: (rejectedRes) => {
-        const payload: ResenaCreateRequest = {
-          cursoDocenteId: this.isResubmission() ? rejectedRes.cursoDocenteId : targetCdId,
-          comentario: this.reviewForm.value.comentario || '',
-          esAnonimo: !!this.reviewForm.value.esAnonimo,
-          calificaciones: calificacionesPayload
-        };
+    const payload: ResenaCreateRequest = {
+      cursoDocenteId: targetCdId,
+      comentario: this.reviewForm.value.comentario || '',
+      esAnonimo: !!this.reviewForm.value.esAnonimo,
+      calificaciones: calificacionesPayload
+    };
 
-        this.studentService.crearResena(payload).subscribe({
-          next: () => {
-            this.isLoading.set(false);
-            this.uiService.showSuccess(this.isResubmission() ? 'Reseña reenviada con éxito para moderación.' : 'Reseña enviada con éxito para moderación.');
-            this.router.navigate(['/estudiante/resenas/mis-resenas']);
-          },
-          error: () => this.isLoading.set(false)
-        });
+    this.studentService.crearResena(payload).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.uiService.showSuccess(
+          this.isResubmission()
+            ? 'Reseña reenviada con éxito para moderación.'
+            : 'Reseña enviada con éxito para moderación.'
+        );
+        this.router.navigate(['/estudiante/resenas/mis-resenas']);
       },
-      error: (err) => {
-        // If not resubmission, just proceed with targetCdId
-        if (!this.isResubmission()) {
-          const payload: ResenaCreateRequest = {
-            cursoDocenteId: targetCdId,
-            comentario: this.reviewForm.value.comentario || '',
-            esAnonimo: !!this.reviewForm.value.esAnonimo,
-            calificaciones: calificacionesPayload
-          };
-
-          this.studentService.crearResena(payload).subscribe({
-            next: () => {
-              this.isLoading.set(false);
-              this.uiService.showSuccess('Reseña enviada con éxito para moderación.');
-              this.router.navigate(['/estudiante/resenas/mis-resenas']);
-            },
-            error: () => this.isLoading.set(false)
-          });
-        } else {
-          this.isLoading.set(false);
-          this.uiService.showError('No se pudo verificar el curso-docente original.');
-        }
-      }
+      error: () => this.isLoading.set(false)
     });
   }
 }
