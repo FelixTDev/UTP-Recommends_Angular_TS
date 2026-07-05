@@ -1,0 +1,183 @@
+
+    <div class="moderacion-resenas">
+      <!-- Header Row -->
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-6 text-start">
+          <h1 class="h2 fw-bold text-dark-title">Moderación de Reseñas</h1>
+          <p class="text-muted-custom">Aprueba, rechaza u oculta reseñas académicas estudiantiles en el sistema.</p>
+        </div>
+      </div>
+
+      <!-- Unified Filters Bar -->
+      <div class="glass-card mb-4 p-3 search-filter-bar">
+        <div class="row g-3 align-items-center">
+          <!-- Text Search input -->
+          <div class="col-md-8">
+            <div class="search-input-group">
+              <i class="bi bi-search search-icon"></i>
+              <input 
+                type="text" 
+                class="form-control filter-search-input" 
+                placeholder="Buscar por curso, docente o texto del comentario..."
+                [ngModel]="searchTerm()"
+                (ngModelChange)="searchTerm.set($event)"
+              />
+              @if (searchTerm()) {
+                <button class="btn-clear-search" (click)="searchTerm.set('')">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+              }
+            </div>
+          </div>
+          
+          <!-- Status Filter -->
+          <div class="col-md-4">
+            <div class="d-flex align-items-center select-filter-container">
+              <i class="bi bi-funnel-fill filter-icon text-muted"></i>
+              <select class="form-select filter-select" [(ngModel)]="filterEstado" (change)="loadQueue()">
+                <option value="PENDIENTE">Pendientes únicamente</option>
+                <option value="APROBADA">Aprobadas</option>
+                <option value="RECHAZADA">Rechazadas</option>
+                <option value="OCULTA">Ocultas</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if (isLoading()) {
+        <app-loading-skeleton type="list" [count]="3"></app-loading-skeleton>
+      } @else if (filteredQueue().length === 0) {
+        <app-empty-state 
+          icon="bi-check2-all"
+          title="Cola de Moderación Vacía" 
+          description="No se encontraron reseñas registradas bajo esta búsqueda o filtro."
+        ></app-empty-state>
+      } @else {
+        <div class="row g-4">
+          @for (res of filteredQueue(); track res.idResena) {
+            <div class="col-12">
+              <!-- Review Card -->
+              <div class="moderation-card glass-card text-start">
+                
+                <!-- Review Card Header -->
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 border-bottom pb-3">
+                  <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="badge-role student-role">ID Reseña: #{{ res.idResena }}</span>
+                    @let status = (res.estado | statusBadge);
+                    <span class="badge-status" [ngClass]="'badge-status-' + res.estado.toLowerCase()">
+                      <span class="status-indicator"></span>
+                      {{ status.label }}
+                    </span>
+                    <span class="text-muted-custom small ms-md-2">
+                      <i class="bi bi-calendar3 me-2"></i>{{ res.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
+                  </div>
+                  
+                  <div class="student-info-tag small text-muted-custom bg-light-subtle px-3 py-2 rounded-pill border border-light-subtle">
+                    <i class="bi bi-person-fill me-2 text-primary-color"></i>
+                    Estudiante: <strong class="text-dark-title">{{ res.esAnonimo ? 'Anónimo' : res.estudiante.nombreCompleto }}</strong> 
+                    @if (!res.esAnonimo) {
+                      <span class="text-muted-custom font-monospace"> ({{ res.estudiante.correo }})</span>
+                    }
+                  </div>
+                </div>
+
+                <!-- Review Content -->
+                <div class="row g-4 align-items-stretch">
+                  <!-- Main commentary text -->
+                  <div class="col-md-9 d-flex flex-column justify-content-between">
+                    <div>
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-person-badge-fill text-gold fs-5 me-2"></i>
+                        <h3 class="h5 fw-bold text-dark-title mb-0">Catedrático: {{ res.docente.nombreCompleto }}</h3>
+                      </div>
+                      <div class="mb-3">
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill" style="font-size: 0.8rem; font-weight: 600;">
+                          <i class="bi bi-book-fill me-2"></i>{{ res.curso.nombre }}
+                        </span>
+                      </div>
+
+                      <div class="comment-quote p-3 rounded mb-3 bg-light border-start-warning">
+                        <i class="bi bi-quote quote-icon text-muted"></i>
+                        <p class="mb-0 fs-6 text-dark-title text-quote">"{{ res.comentario }}"</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Scores summary card -->
+                  <div class="col-md-3">
+                    <div class="scores-card p-3 rounded border border-light-subtle bg-light h-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <span class="d-block small text-muted-custom mb-3 fw-bold text-uppercase tracking-wider">Criterios de Encuesta:</span>
+                        @for (cal of res.calificaciones; track cal.criterioId) {
+                          <div class="d-flex justify-content-between align-items-center mb-2 small">
+                            <span class="text-muted-custom text-truncate pe-2" style="max-width: 140px;">{{ cal.criterio }}</span>
+                            <div class="d-flex align-items-center gap-2">
+                              <strong class="text-dark-title font-monospace">{{ cal.puntaje }}</strong>
+                              <i class="bi bi-star-fill text-gold small"></i>
+                            </div>
+                          </div>
+                        }
+                      </div>
+                      <div class="border-top pt-2 mt-2 d-flex justify-content-between align-items-center">
+                        <span class="small fw-bold text-dark-title text-uppercase tracking-wider">Promedio:</span>
+                        <div class="d-flex align-items-center gap-2">
+                          <strong class="text-gold fs-5 font-monospace">{{ calculateAverage(res) | number:'1.1-1' }}</strong>
+                          <i class="bi bi-star-fill text-gold fs-5"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Controls overlay -->
+                <div class="moderation-actions mt-4 pt-3 border-top d-flex flex-wrap gap-2 justify-content-end align-items-center">
+                  @if (activeRejectId() === res.idResena) {
+                    <!-- Reject input overlay block -->
+                    <div class="w-100 d-flex flex-column gap-2 mt-2 bg-danger-subtle p-3 rounded border border-danger-subtle animate-fade">
+                      <div class="text-start">
+                        <label class="glass-form-label text-danger mb-2 fw-bold"><i class="bi bi-exclamation-circle-fill me-2"></i>Especificar Motivo del Rechazo (Obligatorio)</label>
+                        <input 
+                          type="text" 
+                          class="form-control glass-input" 
+                          placeholder="Indique la causa del rechazo (ej: Contiene lenguaje inapropiado, spam, etc.)"
+                          [(ngModel)]="rejectReasonText"
+                        />
+                      </div>
+                      <div class="d-flex gap-2 justify-content-end mt-1">
+                        <button class="btn btn-sm btn-cancel-modal py-2 px-3" (click)="cancelReject()">Cancelar</button>
+                        <button class="btn btn-sm btn-danger py-2 px-4 rounded-pill shadow-sm" [disabled]="!rejectReasonText.trim()" (click)="confirmReject(res.idResena)">
+                          Confirmar Rechazo
+                        </button>
+                      </div>
+                    </div>
+                  } @else {
+                    <!-- Standard action buttons -->
+                    @if (res.estado === 'PENDIENTE') {
+                      <button class="btn btn-outline-danger py-2 px-4 rounded-pill shadow-sm d-flex align-items-center gap-2" (click)="startReject(res.idResena)">
+                        <i class="bi bi-x-circle-fill me-2"></i>Rechazar
+                      </button>
+                      <button class="btn btn-success py-2 px-4 rounded-pill shadow-sm d-flex align-items-center gap-2" (click)="approve(res.idResena)">
+                        <i class="bi bi-check-circle-fill me-2"></i>Aprobar
+                      </button>
+                    }
+                    @if (res.estado === 'APROBADA') {
+                      <button class="btn btn-outline-danger py-2 px-4 rounded-pill shadow-sm d-flex align-items-center gap-2" (click)="hide(res.idResena)">
+                        <i class="bi bi-eye-slash-fill me-2"></i>Ocultar Reseña
+                      </button>
+                    }
+                    @if (res.estado === 'RECHAZADA' && res.motivoRechazo) {
+                      <div class="w-100 text-start bg-light p-2.5 rounded border small text-muted-custom">
+                        <strong>Motivo de Rechazo:</strong> "{{ res.motivoRechazo }}"
+                      </div>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  

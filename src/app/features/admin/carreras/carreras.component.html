@@ -1,0 +1,162 @@
+
+    <div class="admin-carreras">
+      <!-- Header Row -->
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-6 text-start">
+          <h1 class="h2 fw-bold text-dark-title">Gestionar Carreras Profesionales</h1>
+          <p class="text-muted-custom">Administra las carreras universitarias de la UTP en el sistema.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+          <button class="btn-primary-glass px-4 py-2.5 rounded-pill shadow-sm" (click)="openCreateForm()">
+            <i class="bi bi-plus-circle-fill me-2"></i>Nueva Carrera
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified Filters Bar -->
+      <div class="glass-card mb-4 p-3 search-filter-bar">
+        <div class="row g-3 align-items-center">
+          <!-- Text Search Input -->
+          <div class="col-md-8">
+            <div class="search-input-group">
+              <i class="bi bi-search search-icon"></i>
+              <input 
+                type="text" 
+                class="form-control filter-search-input" 
+                placeholder="Buscar por nombre de carrera..."
+                [ngModel]="searchTerm()"
+                (ngModelChange)="searchTerm.set($event)"
+              />
+              @if (searchTerm()) {
+                <button class="btn-clear-search" (click)="searchTerm.set('')">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+              }
+            </div>
+          </div>
+          
+          <!-- Status Filter -->
+          <div class="col-md-4">
+            <div class="d-flex align-items-center select-filter-container">
+              <i class="bi bi-check-circle-fill filter-icon text-muted"></i>
+              <select class="form-select filter-select" [(ngModel)]="filterEstado" (change)="loadCarreras()">
+                <option value="">Todos los Estados</option>
+                <option value="ACTIVA">Activa</option>
+                <option value="INACTIVA">Inactiva</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Carreras Table (col-12) -->
+      <div class="row">
+        <div class="col-12">
+          <div class="glass-card p-0 overflow-hidden shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0 custom-admin-table">
+                <thead>
+                  <tr>
+                    <th class="ps-4 py-3">Código</th>
+                    <th>Nombre de la Carrera</th>
+                    <th>Estado</th>
+                    <th class="text-end pe-4">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (filteredCarreras().length === 0) {
+                    <tr>
+                      <td colspan="4" class="text-center py-5 text-muted-custom">
+                        <i class="bi bi-mortarboard d-block mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        No se encontraron carreras que coincidan con la búsqueda.
+                      </td>
+                    </tr>
+                  } @else {
+                    @for (carrera of filteredCarreras(); track carrera.id) {
+                      <tr>
+                        <!-- ID -->
+                        <td class="ps-4 py-3 text-muted-custom font-monospace text-start">#{{ carrera.id }}</td>
+                        <!-- Name -->
+                        <td class="text-dark-title fw-bold text-start">{{ carrera.nombre }}</td>
+                        <!-- Status -->
+                        <td class="text-start">
+                          @let status = (carrera.estado | statusBadge);
+                          <span class="badge-status" [ngClass]="'badge-status-' + carrera.estado.toLowerCase().slice(0, -1)">
+                            <span class="status-indicator"></span>
+                            {{ status.label }}
+                          </span>
+                        </td>
+                        <!-- Actions -->
+                        <td class="text-end pe-4">
+                          <div class="action-buttons-group d-inline-flex gap-2">
+                            <!-- Edit Button -->
+                            <button class="action-circle-btn edit-btn" (click)="openEditForm(carrera)" title="Editar">
+                              <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <!-- Inactivate Button -->
+                            @if (carrera.estado === 'ACTIVA') {
+                              <button class="action-circle-btn deactivate-btn" (click)="inactivarCarrera(carrera)" title="Inactivar Carrera">
+                                <i class="bi bi-toggle-off"></i>
+                              </button>
+                            }
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM GLASSMORPHISM MODAL BACKDROP & OVERLAY -->
+      @if (showForm()) {
+        <div class="premium-modal-backdrop" (click)="closeForm()">
+          <div class="premium-modal-dialog" (click)="$event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="premium-modal-header d-flex justify-content-between align-items-center">
+              <h2 class="h5 fw-bold text-dark-title mb-0">
+                <i class="bi" [class.bi-mortarboard-fill]="!isEditMode()" [class.bi-pencil-fill]="isEditMode()"></i>
+                {{ isEditMode() ? 'Editar Carrera Profesional' : 'Registrar Nueva Carrera' }}
+              </h2>
+              <button class="btn-close-modal" (click)="closeForm()"><i class="bi bi-x-lg"></i></button>
+            </div>
+
+            <!-- Modal Content Form -->
+            <div class="premium-modal-body">
+              <form [formGroup]="carreraForm" (ngSubmit)="onSubmit()">
+                <!-- Carrera Name input -->
+                <div class="glass-form-group mb-4 text-start">
+                  <label class="glass-form-label">Nombre de la Carrera</label>
+                  <div class="input-icon-wrapper">
+                    <i class="bi bi-tag-fill input-icon"></i>
+                    <input 
+                      type="text" 
+                      class="glass-input ps-5" 
+                      placeholder="Ej: Ingeniería de Sistemas, Administración..."
+                      formControlName="nombre"
+                      [class.is-invalid]="submitted() && f['nombre'].errors"
+                    />
+                  </div>
+                  @if (submitted() && f['nombre'].errors) {
+                    <div class="error-feedback text-danger small mt-1">El nombre de la carrera es obligatorio.</div>
+                  }
+                </div>
+
+                <!-- Action Button Footer inside form -->
+                <div class="premium-modal-footer d-flex gap-3 justify-content-end mt-4 pt-3 border-top border-light-subtle">
+                  <button type="button" class="btn-cancel-modal py-2 px-4" (click)="closeForm()">Cancelar</button>
+                  <button type="submit" class="btn-primary-glass py-2 px-5 rounded-pill shadow-sm" [disabled]="isLoadingForm()">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" [class.d-none]="!isLoadingForm()"></span>
+                    {{ isEditMode() ? 'Guardar Cambios' : 'Registrar Carrera' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  

@@ -1,7 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../services/auth.service';
 import { UiService } from '../services/ui.service';
 import { ApiErrorResponse } from '../models/public.models';
 

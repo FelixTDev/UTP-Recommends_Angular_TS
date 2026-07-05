@@ -1,0 +1,348 @@
+
+    <div class="public-landing">
+      <!-- Background Blobs -->
+      <div class="auth-bg-blobs" style="opacity: 0.04;">
+        <div class="auth-blob auth-blob-1"></div>
+        <div class="auth-blob auth-blob-2"></div>
+        <div class="auth-blob auth-blob-3"></div>
+      </div>
+
+      <!-- Navbar overlay -->
+      <nav class="public-nav">
+        <div class="container d-flex justify-content-between align-items-center">
+          <div class="brand">
+            <span class="logo-box">U</span>
+            <span class="logo-box">T</span>
+            <span class="logo-box">P</span>
+            <span class="logo-plus">+</span>
+            <span class="logo-text">Recommends</span>
+          </div>
+          <div class="actions">
+            @if (authService.isAuthenticated()) {
+              <a [routerLink]="dashboardRoute()" class="btn-primary-glass py-2 text-decoration-none">
+                <i class="bi bi-grid me-2"></i>Mi Panel
+              </a>
+            } @else {
+              <a routerLink="/auth/login" class="btn-secondary-glass me-2 py-2 text-decoration-none">Ingresar</a>
+              <a routerLink="/auth/registro" class="btn-primary-glass py-2 text-decoration-none">Registrarse</a>
+            }
+          </div>
+        </div>
+      </nav>
+
+      <!-- Hero Header (Split Screen) -->
+      <header class="hero-section">
+        <div class="container">
+          <div class="row align-items-center g-5">
+            <!-- Hero Text & Search Filters -->
+            <div class="col-lg-7 text-start">
+              <h1 class="display-5 fw-bold mb-3 text-dark-title">Encuentra y comparte <span class="text-gradient">opiniones reales</span></h1>
+              <p class="lead text-muted-custom mb-4">
+                Plataforma oficial de recomendaciones de cursos y docentes de la UTP. Toma mejores decisiones para tu matrícula basándote en la experiencia de tus compañeros.
+              </p>
+
+              <!-- Search Filter Bar -->
+              <div class="filter-bar text-start mx-0">
+                <div class="row g-3">
+                  <div class="col-md-5">
+                    <label class="glass-form-label"><i class="bi bi-search me-1"></i> Buscar docente o curso</label>
+                    <input 
+                      type="text" 
+                      class="glass-input" 
+                      placeholder="Ej: Análisis de Algoritmos, Carlos Pérez..."
+                      [(ngModel)]="searchText"
+                      (ngModelChange)="onFilterChange()"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="glass-form-label"><i class="bi bi-mortarboard me-1"></i> Carrera (Filtro)</label>
+                    <select 
+                      class="glass-input" 
+                      [(ngModel)]="selectedCarrera"
+                      (ngModelChange)="onFilterChange()"
+                    >
+                      <option [value]="0">Todas las carreras</option>
+                      @for (carrera of carreras(); track carrera.id) {
+                        <option [value]="carrera.id">{{ carrera.nombre }}</option>
+                      }
+                    </select>
+                  </div>
+                  <div class="col-md-3 d-flex align-items-end">
+                    <button class="btn-secondary-glass w-100 py-2.5" (click)="resetFilters()">
+                      <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hero Carousel (Right Side) -->
+            <div class="col-lg-5 col-12">
+              <div class="premium-carousel">
+                <div class="carousel-track">
+                  @for (slide of slides; track slide.image; let idx = $index) {
+                    <div 
+                      class="carousel-slide" 
+                      [class.active]="activeSlide() === idx"
+                    >
+                      <div class="slide-image-container">
+                        <img [src]="slide.image" [alt]="slide.title" class="slide-img" />
+                        <div class="slide-overlay"></div>
+                      </div>
+                      <div class="slide-caption">
+                        <h4 class="slide-title">{{ slide.title }}</h4>
+                        <p class="slide-desc">{{ slide.description }}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+                <!-- Controls and Dots -->
+                <button class="carousel-btn prev" (click)="prevSlide()" aria-label="Anterior">
+                  <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="carousel-btn next" (click)="nextSlide()" aria-label="Siguiente">
+                  <i class="bi bi-chevron-right"></i>
+                </button>
+                <div class="carousel-dots">
+                  @for (slide of slides; track slide.image; let idx = $index) {
+                    <button 
+                      class="carousel-dot" 
+                      [class.active]="activeSlide() === idx"
+                      (click)="setSlide(idx)"
+                      [attr.aria-label]="'Ir al slide ' + (idx + 1)"
+                    ></button>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Stats Section -->
+      <section class="stats-section container mb-5">
+        <div class="stats-container">
+          <div class="row text-center g-4">
+            <div class="col-md-4">
+              <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                  <i class="bi bi-chat-heart-fill"></i>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-number">+1,500</h3>
+                  <p class="stat-label">Opiniones Reales</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                  <i class="bi bi-person-video3"></i>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-number">+350</h3>
+                  <p class="stat-label">Docentes Evaluados</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="stat-card">
+                <div class="stat-icon-wrapper">
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <div class="stat-content">
+                  <h3 class="stat-number">4.8 / 5</h3>
+                  <p class="stat-label">Calificación Promedio</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Body -->
+      <section class="reviews-section container py-4">
+
+
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+          <h2 class="h3 fw-bold mb-0 text-dark" style="color: #0f172a;">Reseñas Recientes</h2>
+          <span class="badge bg-light text-dark border px-3 py-2 rounded-pill font-monospace" style="font-size: 0.85rem;">
+            {{ filteredReviews.length }} reseña(s) encontrada(s)
+          </span>
+        </div>
+
+        @if (isLoading()) {
+          <app-loading-skeleton type="card" [count]="3"></app-loading-skeleton>
+        } @else if (filteredReviews.length === 0) {
+          <app-empty-state 
+            icon="bi-chat-left-dots-fill"
+            title="Sin Reseñas Aprobadas" 
+            description="Aún no hay reseñas registradas o ninguna coincide con tus filtros."
+            [actionText]="authService.isAuthenticated() ? 'Escribir Reseña' : 'Iniciar Sesión para Escribir'"
+            (action)="onEmptyStateAction()"
+          ></app-empty-state>
+        } @else {
+          <div class="row g-4">
+            @for (resena of filteredReviews; track resena.id; let idx = $index) {
+              <div class="col-md-6 col-lg-4 fade-in-up" [style.animation-delay]="(idx % 3) * 0.15 + 's'">
+                <div class="review-card" [ngClass]="getCardScoreClass(resena)">
+                  <div class="card-header-custom d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                      <h3 class="h5 fw-bold mb-1 text-dark" style="color: #0f172a;">{{ resena.docente }}</h3>
+                      <span class="badge-badge badge-primary">{{ resena.curso }}</span>
+                    </div>
+                    <div class="average-stars">
+                      <app-star-rating [value]="calculateAverage(resena)" [readOnly]="true"></app-star-rating>
+                    </div>
+                  </div>
+                  
+                  <p class="comment-text text-muted-custom mb-3">
+                    <i class="bi bi-quote text-gold fs-4 me-1 d-inline-block" style="transform: rotate(180deg) translateY(-2px);"></i>
+                    {{ resena.comentario }}
+                  </p>
+
+                  <!-- Criteria breakdown -->
+                  <div class="criteria-list mb-3">
+                    @for (cal of resena.calificaciones; track cal.criterio) {
+                      <div class="criteria-item d-flex justify-content-between align-items-center mb-1.5">
+                        <span class="criteria-name">{{ cal.criterio }}</span>
+                        <div class="criteria-stars">
+                          <span class="score-num me-2 text-gold font-monospace fw-bold">{{ cal.puntaje }}</span>
+                          <i class="bi bi-star-fill text-gold small"></i>
+                        </div>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="card-footer-custom d-flex justify-content-between align-items-center pt-3 mt-auto">
+                    <span class="student-name">
+                      @if (!resena.esAnonimo) {
+                        <i class="bi bi-patch-check-fill text-success me-1.5" title="Estudiante UTP Verificado"></i>
+                      } @else {
+                        <i class="bi bi-person-circle text-gold me-1.5"></i>
+                      }
+                      {{ resena.esAnonimo ? 'Estudiante Anónimo' : resena.nombreEstudianteVisible }}
+                    </span>
+                    <span class="review-date">
+                      <i class="bi bi-calendar3 me-1.5"></i>
+                      {{ resena.fechaCreacion | date:'dd/MM/yyyy' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Pagination Bar -->
+          @if (totalPages() > 1) {
+            <div class="pagination-container d-flex justify-content-center mt-5">
+              <button 
+                class="btn-secondary-glass py-2 px-3 me-2" 
+                [disabled]="currentPage() === 0"
+                (click)="changePage(currentPage() - 1)"
+              >
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <span class="align-self-center mx-3 text-muted-custom">
+                Pág. <strong>{{ currentPage() + 1 }}</strong> de {{ totalPages() }}
+              </span>
+              <button 
+                class="btn-secondary-glass py-2 px-3" 
+                [disabled]="currentPage() >= totalPages() - 1"
+                (click)="changePage(currentPage() + 1)"
+              >
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          }
+        }
+      </section>
+
+      <!-- Footer Section -->
+      <footer class="premium-footer">
+        <div class="container">
+          <div class="row g-4 justify-content-between">
+            <!-- Columna 1: Sedes -->
+            <div class="col-lg-4 col-md-12">
+              <h4 class="footer-title">Nuestros Campus</h4>
+              <div class="campus-grid">
+                @for (campus of campuses; track campus) {
+                  <span class="campus-badge">{{ campus }}</span>
+                }
+              </div>
+              <div class="footer-actions mt-4 d-flex flex-wrap gap-2">
+                <a href="https://www.utp.edu.pe/admision" target="_blank" class="btn-footer-outline">
+                  <i class="bi bi-mortarboard me-2"></i>Admisión 2026
+                </a>
+                <a href="https://www.utp.edu.pe/trabaja-en-utp" target="_blank" class="btn-footer-outline">
+                  <i class="bi bi-briefcase me-2"></i>Trabaja en UTP
+                </a>
+              </div>
+            </div>
+
+            <!-- Columna 2: Contacto -->
+            <div class="col-lg-4 col-md-6">
+              <h4 class="footer-title">Canales de Atención</h4>
+              <div class="contact-block mb-3">
+                <h5 class="contact-subtitle"><i class="bi bi-telephone-fill text-danger me-2"></i>Postulantes</h5>
+                <p class="contact-text">Lima: <strong>(01) 315 9610</strong> | Provincia: <strong>0800 71 900</strong></p>
+                <p class="contact-text">WhatsApp: <a href="https://bit.ly/ConversaUTP_WA" target="_blank" class="footer-link">Conversa aquí</a></p>
+                <p class="contact-text">Correo: <a href="mailto:admision@utp.edu.pe" class="footer-link">admision&#64;utp.edu.pe</a></p>
+                <p class="contact-meta">Lun - Sab: 8:30 a.m. a 8:00 p.m.</p>
+              </div>
+              <div class="contact-block">
+                <h5 class="contact-subtitle"><i class="bi bi-shield-fill-check text-danger me-2"></i>Alumnos (SAE)</h5>
+                <p class="contact-text">Lima: <strong>(01) 315 9600</strong> | Provincia: <strong>0801 19 600</strong></p>
+                <p class="contact-text">WhatsApp: <a href="https://bit.ly/contacto_SAE" target="_blank" class="footer-link">Contacto SAE</a></p>
+                <p class="contact-meta">Lun - Vie: 7:00 a.m. a 10:00 p.m. | Sáb - Dom: 7:00 a.m. a 8:00 p.m.</p>
+              </div>
+            </div>
+
+            <!-- Columna 3: Enlaces y Redes -->
+            <div class="col-lg-3 col-md-6 d-flex flex-column justify-content-between">
+              <div>
+                <h4 class="footer-title">Síguenos</h4>
+                <div class="social-links d-flex gap-2 mb-4">
+                  <a href="https://www.facebook.com/UTP.Peru" target="_blank" class="social-btn facebook" aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                  </a>
+                  <a href="https://www.youtube.com/user/UTPOficial" target="_blank" class="social-btn youtube" aria-label="YouTube">
+                    <i class="bi bi-youtube"></i>
+                  </a>
+                  <a href="https://www.linkedin.com/school/universidad-tecnologica-del-peru/" target="_blank" class="social-btn linkedin" aria-label="LinkedIn">
+                    <i class="bi bi-linkedin"></i>
+                  </a>
+                  <a href="https://www.instagram.com/utp.peru/" target="_blank" class="social-btn instagram" aria-label="Instagram">
+                    <i class="bi bi-instagram"></i>
+                  </a>
+                </div>
+
+                <h4 class="footer-title">Institucional</h4>
+                <ul class="footer-links list-unstyled">
+                  <li><a href="https://www.utp.edu.pe/politicas-de-privacidad" target="_blank">Políticas de privacidad</a></li>
+                  <li><a href="https://www.utp.edu.pe/transparencia" target="_blank">Portal de transparencia</a></li>
+                  <li><a href="https://www.utp.edu.pe/terminos-y-condiciones" target="_blank">Términos y condiciones</a></li>
+                  <li><a href="https://www.utp.edu.pe/mapa-del-sitio" target="_blank">Mapa del sitio</a></li>
+                </ul>
+              </div>
+
+              <div class="reclamaciones-block mt-3">
+                <a href="https://librodereclamaciones.utp.edu.pe/" target="_blank" class="reclamaciones-btn">
+                  <span>Libro de Reclamaciones</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <hr class="footer-divider" />
+
+          <div class="footer-bottom">
+            <span class="copyright">Universidad Tecnológica del Perú | UTP S.A.C. RUC: 20462509236. Todos los derechos reservados.</span>
+            <button class="back-to-top-btn" (click)="scrollToTop()" title="Volver arriba">
+              <i class="bi bi-arrow-up-short"></i>
+            </button>
+          </div>
+        </div>
+      </footer>
+    </div>
+  

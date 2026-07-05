@@ -13,21 +13,8 @@ export interface ConfirmDialogData {
   selector: 'app-confirm-dialog',
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
-  template: `
-    <h2 mat-dialog-title>{{ data.title }}</h2>
-    <mat-dialog-content>
-      <p>{{ data.message }}</p>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">{{ data.cancelText }}</button>
-      <button mat-raised-button color="primary" (click)="onConfirm()">{{ data.confirmText }}</button>
-    </mat-dialog-actions>
-  `,
-  styles: [`
-    mat-dialog-actions {
-      padding: 16px 0 0;
-    }
-  `]
+  templateUrl: './confirm-dialog.component.html',
+  styleUrl: './confirm-dialog.component.scss'
 })
 export class ConfirmDialogComponent {
   readonly dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);

@@ -1,0 +1,184 @@
+
+    <div class="admin-curso-docente">
+      <!-- Header Row -->
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-6 text-start">
+          <h1 class="h2 fw-bold text-dark-title">Asignaciones Curso - Docente</h1>
+          <p class="text-muted-custom">Asigna docentes a cursos específicos y controla su disponibilidad para reseñas.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+          <button class="btn-primary-glass px-4 py-2.5 rounded-pill shadow-sm" (click)="openCreateForm()">
+            <i class="bi bi-plus-circle-fill me-2"></i>Nueva Asignación
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified Filters Bar -->
+      <div class="glass-card mb-4 p-3 search-filter-bar">
+        <div class="row g-3 align-items-center">
+          <!-- Text Search input -->
+          <div class="col-md-8">
+            <div class="search-input-group">
+              <i class="bi bi-search search-icon"></i>
+              <input 
+                type="text" 
+                class="form-control filter-search-input" 
+                placeholder="Buscar por curso o docente asignado..."
+                [ngModel]="searchTerm()"
+                (ngModelChange)="searchTerm.set($event)"
+              />
+              @if (searchTerm()) {
+                <button class="btn-clear-search" (click)="searchTerm.set('')">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+              }
+            </div>
+          </div>
+          
+          <!-- Status Filter -->
+          <div class="col-md-4">
+            <div class="d-flex align-items-center select-filter-container">
+              <i class="bi bi-check-circle-fill filter-icon text-muted"></i>
+              <select class="form-select filter-select" [(ngModel)]="filterEstado" (change)="loadAsignaciones()">
+                <option value="">Todos los Estados</option>
+                <option value="ACTIVO">Activo</option>
+                <option value="INACTIVO">Inactivo</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Asignaciones Table (col-12) -->
+      <div class="row">
+        <div class="col-12">
+          <div class="glass-card p-0 overflow-hidden shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0 custom-admin-table">
+                <thead>
+                  <tr>
+                    <th class="ps-4 py-3">Curso Académico</th>
+                    <th>Docente Catedrático</th>
+                    <th>Estado</th>
+                    <th class="text-end pe-4">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (filteredAsignaciones().length === 0) {
+                    <tr>
+                      <td colspan="4" class="text-center py-5 text-muted-custom">
+                        <i class="bi bi-link-45deg d-block mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        No se encontraron asignaciones que coincidan con la búsqueda.
+                      </td>
+                    </tr>
+                  } @else {
+                    @for (asig of filteredAsignaciones(); track asig.id) {
+                      <tr>
+                        <!-- Curso -->
+                        <td class="ps-4 py-3 text-dark-title fw-bold text-start">{{ asig.curso }}</td>
+                        <!-- Docente -->
+                        <td class="text-start">{{ asig.docente }}</td>
+                        <!-- Status -->
+                        <td class="text-start">
+                          @let status = (asig.estado | statusBadge);
+                          <span class="badge-status" [ngClass]="'badge-status-' + asig.estado.toLowerCase()">
+                            <span class="status-indicator"></span>
+                            {{ status.label }}
+                          </span>
+                        </td>
+                        <!-- Actions -->
+                        <td class="text-end pe-4">
+                          <!-- Activate/Deactivate Button -->
+                          @if (asig.estado === 'ACTIVO') {
+                            <button class="action-circle-btn deactivate-btn" (click)="toggleEstado(asig)" title="Desactivar Asignación">
+                              <i class="bi bi-toggle-off"></i>
+                            </button>
+                          } @else {
+                            <button class="action-circle-btn activate-btn" (click)="toggleEstado(asig)" title="Activar Asignación">
+                              <i class="bi bi-toggle-on"></i>
+                            </button>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM GLASSMORPHISM MODAL BACKDROP & OVERLAY -->
+      @if (showForm()) {
+        <div class="premium-modal-backdrop" (click)="closeForm()">
+          <div class="premium-modal-dialog" (click)="$event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="premium-modal-header d-flex justify-content-between align-items-center">
+              <h2 class="h5 fw-bold text-dark-title mb-0">
+                <i class="bi bi-link-45deg"></i>
+                Registrar Nueva Asignación
+              </h2>
+              <button class="btn-close-modal" (click)="closeForm()"><i class="bi bi-x-lg"></i></button>
+            </div>
+
+            <!-- Modal Content Form -->
+            <div class="premium-modal-body">
+              <form [formGroup]="assignForm" (ngSubmit)="onSubmit()">
+                <!-- Course select -->
+                <div class="glass-form-group mb-3 text-start">
+                  <label class="glass-form-label">Curso Académico</label>
+                  <div class="input-icon-wrapper">
+                    <i class="bi bi-book-fill input-icon"></i>
+                    <select 
+                      class="glass-input select-arrow ps-5" 
+                      formControlName="cursoId"
+                      [class.is-invalid]="submitted() && f['cursoId'].errors"
+                    >
+                      <option value="">Selecciona el curso...</option>
+                      @for (c of activeCursos(); track c.id) {
+                        <option [value]="c.id">{{ c.nombre }} ({{ c.tipo === 'GENERAL' ? 'Estudios Generales' : 'Especifico de Carrera' }})</option>
+                      }
+                    </select>
+                  </div>
+                  @if (submitted() && f['cursoId'].errors) {
+                    <div class="error-feedback text-danger small mt-1">Debe seleccionar un curso académico.</div>
+                  }
+                </div>
+
+                <!-- Teacher select -->
+                <div class="glass-form-group mb-4 text-start">
+                  <label class="glass-form-label">Docente Catedrático</label>
+                  <div class="input-icon-wrapper">
+                    <i class="bi bi-person-badge-fill input-icon"></i>
+                    <select 
+                      class="glass-input select-arrow ps-5" 
+                      formControlName="docenteId"
+                      [class.is-invalid]="submitted() && f['docenteId'].errors"
+                    >
+                      <option value="">Selecciona el docente...</option>
+                      @for (d of activeDocentes(); track d.id) {
+                        <option [value]="d.id">{{ d.nombres }} {{ d.apellidos }}</option>
+                      }
+                    </select>
+                  </div>
+                  @if (submitted() && f['docenteId'].errors) {
+                    <div class="error-feedback text-danger small mt-1">Debe seleccionar un docente.</div>
+                  }
+                </div>
+
+                <!-- Action Button Footer inside form -->
+                <div class="premium-modal-footer d-flex gap-3 justify-content-end mt-4 pt-3 border-top border-light-subtle">
+                  <button type="button" class="btn-cancel-modal py-2 px-4" (click)="closeForm()">Cancelar</button>
+                  <button type="submit" class="btn-primary-glass py-2 px-5 rounded-pill shadow-sm" [disabled]="isLoadingForm()">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" [class.d-none]="!isLoadingForm()"></span>
+                    Asignar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  

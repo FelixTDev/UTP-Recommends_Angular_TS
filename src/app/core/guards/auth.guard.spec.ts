@@ -3,7 +3,7 @@ import { provideRouter, Router } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { authGuard } from './auth.guard';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../services/auth.service';
 
 function createJwt(payload: Record<string, unknown>): string {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));

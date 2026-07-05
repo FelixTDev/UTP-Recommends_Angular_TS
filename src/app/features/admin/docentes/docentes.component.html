@@ -1,0 +1,203 @@
+
+    <div class="admin-docentes">
+      <!-- Header Row -->
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-6 text-start">
+          <h1 class="h2 fw-bold text-dark-title">Gestionar Docentes</h1>
+          <p class="text-muted-custom">Administra la información de los profesores de la institución.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+          <button class="btn-primary-glass px-4 py-2.5 rounded-pill shadow-sm" (click)="openCreateForm()">
+            <i class="bi bi-plus-circle-fill me-2"></i>Nuevo Docente
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified Filters Bar -->
+      <div class="glass-card mb-4 p-3 search-filter-bar">
+        <div class="row g-3 align-items-center">
+          <!-- Text Search input -->
+          <div class="col-md-8">
+            <div class="search-input-group">
+              <i class="bi bi-search search-icon"></i>
+              <input 
+                type="text" 
+                class="form-control filter-search-input" 
+                placeholder="Buscar por nombre, apellido o correo..."
+                [ngModel]="searchTerm()"
+                (ngModelChange)="searchTerm.set($event)"
+              />
+              @if (searchTerm()) {
+                <button class="btn-clear-search" (click)="searchTerm.set('')">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+              }
+            </div>
+          </div>
+          
+          <!-- Status Filter -->
+          <div class="col-md-4">
+            <div class="d-flex align-items-center select-filter-container">
+              <i class="bi bi-check-circle-fill filter-icon text-muted"></i>
+              <select class="form-select filter-select" [(ngModel)]="filterEstado" (change)="loadDocentes()">
+                <option value="">Todos los Estados</option>
+                <option value="ACTIVO">Activo</option>
+                <option value="INACTIVO">Inactivo</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Docentes Table (col-12) -->
+      <div class="row">
+        <div class="col-12">
+          <div class="glass-card p-0 overflow-hidden shadow-sm">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0 custom-admin-table">
+                <thead>
+                  <tr>
+                    <th class="ps-4 py-3">Docente (Nombre y Apellidos)</th>
+                    <th>Correo Electrónico</th>
+                    <th>Estado</th>
+                    <th class="text-end pe-4">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @if (filteredDocentes().length === 0) {
+                    <tr>
+                      <td colspan="4" class="text-center py-5 text-muted-custom">
+                        <i class="bi bi-person-badge d-block mb-2" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                        No se encontraron docentes que coincidan con la búsqueda.
+                      </td>
+                    </tr>
+                  } @else {
+                    @for (doc of filteredDocentes(); track doc.id) {
+                      <tr>
+                        <!-- Name & Avatar -->
+                        <td class="ps-4 py-3 text-start">
+                          <div class="d-flex align-items-center gap-3">
+                            <div class="user-avatar-mini admin-avatar">
+                              {{ doc.nombres.charAt(0) }}{{ doc.apellidos.charAt(0) }}
+                            </div>
+                            <div class="fw-bold text-dark-title">{{ doc.nombres }} {{ doc.apellidos }}</div>
+                          </div>
+                        </td>
+                        <!-- Email -->
+                        <td class="text-muted-custom text-start">{{ doc.email || 'Sin correo registrado' }}</td>
+                        <!-- Status -->
+                        <td class="text-start">
+                          @let status = (doc.estado | statusBadge);
+                          <span class="badge-status" [ngClass]="'badge-status-' + doc.estado.toLowerCase()">
+                            <span class="status-indicator"></span>
+                            {{ status.label }}
+                          </span>
+                        </td>
+                        <!-- Actions -->
+                        <td class="text-end pe-4">
+                          <div class="action-buttons-group d-inline-flex gap-2">
+                            <!-- Edit Button -->
+                            <button class="action-circle-btn edit-btn" (click)="openEditForm(doc)" title="Editar">
+                              <i class="bi bi-pencil-fill"></i>
+                            </button>
+                            <!-- Inactivate Button -->
+                            @if (doc.estado === 'ACTIVO') {
+                              <button class="action-circle-btn deactivate-btn" (click)="inactivarDocente(doc)" title="Inactivar Docente">
+                                <i class="bi bi-toggle-off"></i>
+                              </button>
+                            }
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREMIUM GLASSMORPHISM MODAL BACKDROP & OVERLAY -->
+      @if (showForm()) {
+        <div class="premium-modal-backdrop" (click)="closeForm()">
+          <div class="premium-modal-dialog" (click)="$event.stopPropagation()">
+            <!-- Modal Header -->
+            <div class="premium-modal-header d-flex justify-content-between align-items-center">
+              <h2 class="h5 fw-bold text-dark-title mb-0">
+                <i class="bi" [class.bi-person-badge-fill]="!isEditMode()" [class.bi-pencil-fill]="isEditMode()"></i>
+                {{ isEditMode() ? 'Editar Datos de Docente' : 'Registrar Nuevo Docente' }}
+              </h2>
+              <button class="btn-close-modal" (click)="closeForm()"><i class="bi bi-x-lg"></i></button>
+            </div>
+
+            <!-- Modal Content Form -->
+            <div class="premium-modal-body">
+              <form [formGroup]="docenteForm" (ngSubmit)="onSubmit()">
+                <!-- Names & Lastnames in a two-column row -->
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6 text-start">
+                    <div class="glass-form-group">
+                      <label class="glass-form-label">Nombres</label>
+                      <input 
+                        type="text" 
+                        class="glass-input" 
+                        placeholder="Nombres"
+                        formControlName="nombres"
+                        [class.is-invalid]="submitted() && f['nombres'].errors"
+                      />
+                      @if (submitted() && f['nombres'].errors) {
+                        <div class="error-feedback text-danger small mt-1">Requerido (letras únicamente).</div>
+                      }
+                    </div>
+                  </div>
+                  <div class="col-md-6 text-start">
+                    <div class="glass-form-group">
+                      <label class="glass-form-label">Apellidos</label>
+                      <input 
+                        type="text" 
+                        class="glass-input" 
+                        placeholder="Apellidos"
+                        formControlName="apellidos"
+                        [class.is-invalid]="submitted() && f['apellidos'].errors"
+                      />
+                      @if (submitted() && f['apellidos'].errors) {
+                        <div class="error-feedback text-danger small mt-1">Requerido (letras únicamente).</div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Email input -->
+                <div class="glass-form-group mb-4 text-start">
+                  <label class="glass-form-label">Correo Electrónico (Opcional)</label>
+                  <div class="input-icon-wrapper">
+                    <i class="bi bi-envelope-fill input-icon"></i>
+                    <input 
+                      type="email" 
+                      class="glass-input ps-5" 
+                      placeholder="docente@utp.edu.pe"
+                      formControlName="email"
+                      [class.is-invalid]="submitted() && f['email'].errors"
+                    />
+                  </div>
+                  @if (submitted() && f['email'].errors) {
+                    <div class="error-feedback text-danger small mt-1">Formato de correo electrónico inválido.</div>
+                  }
+                </div>
+
+                <!-- Action Button Footer inside form -->
+                <div class="premium-modal-footer d-flex gap-3 justify-content-end mt-4 pt-3 border-top border-light-subtle">
+                  <button type="button" class="btn-cancel-modal py-2 px-4" (click)="closeForm()">Cancelar</button>
+                  <button type="submit" class="btn-primary-glass py-2 px-5 rounded-pill shadow-sm" [disabled]="isLoadingForm()">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" [class.d-none]="!isLoadingForm()"></span>
+                    {{ isEditMode() ? 'Guardar Cambios' : 'Registrar Docente' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  

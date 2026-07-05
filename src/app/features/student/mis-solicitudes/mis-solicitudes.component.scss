@@ -1,0 +1,23 @@
+
+    .mis-solicitudes {
+      color: var(--utp-text);
+    }
+    .sol-row-card {
+      transition: transform 0.2s ease;
+    }
+    .sol-row-card:hover {
+      transform: scale(1.005);
+    }
+    .bg-dark-opacity {
+      background: var(--utp-surface-soft);
+    }
+    .comment-text {
+      line-height: 1.5;
+    }
+    .bg-danger-opacity {
+      background: rgba(220, 38, 38, 0.1);
+    }
+    .text-red {
+      color: var(--utp-danger);
+    }
+  

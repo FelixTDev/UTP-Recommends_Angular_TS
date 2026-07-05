@@ -5,52 +5,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-star-rating',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="star-rating-container" [class.read-only]="readOnly">
-      @for (star of stars; track star) {
-        <i 
-          class="bi" 
-          [class.bi-star-fill]="isFullStar(star)"
-          [class.bi-star-half]="isHalfStar(star)"
-          [class.bi-star]="isEmptyStar(star)"
-          (click)="onStarClick(star)"
-          (mouseenter)="onMouseEnter(star)"
-          (mouseleave)="onMouseLeave()"
-        ></i>
-      }
-      @if (showValue && value > 0) {
-        <span class="rating-value">{{ value | number:'1.1-1' }}</span>
-      }
-    </div>
-  `,
-  styles: [`
-    .star-rating-container {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 1.25rem;
-    }
-    i {
-      color: #ffc107;
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-    i:hover {
-      transform: scale(1.2);
-    }
-    .read-only i {
-      cursor: default;
-    }
-    .read-only i:hover {
-      transform: none;
-    }
-    .rating-value {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--utp-text-secondary);
-      margin-left: 8px;
-    }
-  `]
+  templateUrl: './star-rating.component.html',
+  styleUrl: './star-rating.component.scss'
 })
 export class StarRatingComponent {
   @Input() value = 0;

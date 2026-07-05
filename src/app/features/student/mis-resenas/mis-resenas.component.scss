@@ -1,0 +1,33 @@
+
+    .mis-resenas {
+      color: var(--utp-text);
+    }
+    .review-row-card {
+      transition: transform 0.2s ease;
+    }
+    .review-row-card:hover {
+      transform: scale(1.005);
+    }
+    .comment-text {
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .bg-dark-opacity {
+      background: var(--utp-surface-soft);
+    }
+    .ratings-mini-grid {
+      border: 1px solid var(--utp-border);
+    }
+    .rating-mini-item {
+      font-size: 0.85rem;
+    }
+    .criteria-label {
+      font-size: 0.75rem;
+    }
+    .bg-danger-opacity {
+      background: rgba(220, 38, 38, 0.1);
+    }
+    .text-red {
+      color: var(--utp-danger);
+    }
+  

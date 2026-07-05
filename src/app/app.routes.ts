@@ -22,7 +22,7 @@ export const routes: Routes = [
   // Student Routes (Protected by AuthGuard and RoleGuard)
   {
     path: 'estudiante',
-    loadComponent: () => import('./layout/app-shell/app-shell.component').then(m => m.AppShellComponent),
+    loadComponent: () => import('./features/layout/app-shell/app-shell.component').then(m => m.AppShellComponent),
     canActivate: [authGuard, roleGuard],
     data: { role: 'ESTUDIANTE' },
     children: [
@@ -61,7 +61,7 @@ export const routes: Routes = [
   // Admin Routes (Protected by AuthGuard and RoleGuard)
   {
     path: 'admin',
-    loadComponent: () => import('./layout/app-shell/app-shell.component').then(m => m.AppShellComponent),
+    loadComponent: () => import('./features/layout/app-shell/app-shell.component').then(m => m.AppShellComponent),
     canActivate: [authGuard, roleGuard],
     data: { role: 'ADMIN' },
     children: [

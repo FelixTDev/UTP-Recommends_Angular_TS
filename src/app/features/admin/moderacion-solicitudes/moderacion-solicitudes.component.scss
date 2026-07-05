@@ -1,0 +1,262 @@
+
+    .moderacion-solicitudes {
+      color: var(--text-primary);
+    }
+    .text-dark-title {
+      color: #0f172a !important;
+    }
+    
+    /* Spacing for icons inside headers, badges, and buttons to prevent overlaps */
+    .moderation-card h3 i, 
+    .moderation-card button i, 
+    .moderation-card .badge-status i,
+    .moderation-card .student-info-tag i,
+    .moderation-card .badge i,
+    .moderation-card h4 i {
+      margin-right: 8px !important;
+      display: inline-block;
+    }
+    
+    /* Unified Search/Filter Bar */
+    .search-filter-bar {
+      border: 1px solid var(--utp-border);
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 18px;
+    }
+    .search-input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      color: #94a3b8;
+      font-size: 1.05rem;
+    }
+    .filter-search-input {
+      padding: 10px 45px;
+      font-size: 0.88rem;
+      border: 1px solid var(--utp-border);
+      border-radius: 12px;
+      background: #ffffff;
+      color: #0f172a;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    .filter-search-input:focus {
+      border-color: rgba(255, 23, 68, 0.4);
+      box-shadow: 0 0 0 4px rgba(255, 23, 68, 0.08);
+      background: #ffffff;
+    }
+    .btn-clear-search {
+      position: absolute;
+      right: 14px;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-clear-search:hover {
+      color: var(--utp-primary);
+    }
+    
+    .select-filter-container {
+      position: relative;
+      width: 100%;
+    }
+    .filter-icon {
+      position: absolute;
+      left: 14px;
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .filter-select {
+      padding: 10px 14px 10px 38px;
+      font-size: 0.88rem;
+      border: 1px solid var(--utp-border);
+      border-radius: 12px;
+      background-color: #ffffff;
+      color: #0f172a;
+      cursor: pointer;
+      width: 100%;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px 10px;
+    }
+    .filter-select:focus {
+      border-color: rgba(255, 23, 68, 0.4);
+      box-shadow: 0 0 0 4px rgba(255, 23, 68, 0.08);
+    }
+
+    /* Badges status */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 30px;
+    }
+    .badge-status-pendiente {
+      background: rgba(217, 119, 6, 0.06);
+      color: #d97706;
+      border: 1px solid rgba(217, 119, 6, 0.12);
+    }
+    .badge-status-pendiente .status-indicator { background-color: #d97706; }
+    
+    .badge-status-aprobada {
+      background: rgba(5, 150, 105, 0.06);
+      color: #059669;
+      border: 1px solid rgba(5, 150, 105, 0.12);
+    }
+    .badge-status-aprobada .status-indicator { background-color: #059669; }
+    
+    .badge-status-rechazada {
+      background: rgba(220, 38, 38, 0.06);
+      color: #dc2626;
+      border: 1px solid rgba(220, 38, 38, 0.12);
+    }
+    .badge-status-rechazada .status-indicator { background-color: #dc2626; }
+    
+    .status-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .badge-role {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 30px;
+    }
+    .student-role {
+      background: rgba(2, 132, 199, 0.06);
+      color: #0284c7;
+      border: 1px solid rgba(2, 132, 199, 0.12);
+    }
+    
+    .moderation-card {
+      transition: all 0.25s ease;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid var(--utp-border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .moderation-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.02);
+      background: #ffffff;
+    }
+
+    .comment-block {
+      border-left: 4px solid var(--utp-primary);
+      line-height: 1.5;
+    }
+    .comment-text {
+      font-style: italic;
+      font-size: 0.95rem;
+      color: #334155 !important;
+    }
+    
+    .border-start-desktop {
+      border-left: 1px solid #e2e8f0;
+    }
+    @media (max-width: 767.98px) {
+      .border-start-desktop {
+        border-left: none !important;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 15px;
+      }
+    }
+    
+    /* Horizontal rule with text */
+    .hr-text {
+      display: flex;
+      align-items: center;
+      text-align: center;
+    }
+    .hr-text::before, .hr-text::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px dashed #cbd5e1;
+    }
+    .hr-text::before {
+      margin-right: .5em;
+    }
+    .hr-text::after {
+      margin-left: .5em;
+    }
+
+    .glass-form-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .glass-input {
+      width: 100%;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      border: 1px solid var(--utp-border);
+      border-radius: 10px;
+      background: #ffffff;
+      color: #0f172a;
+      transition: all 0.2s ease;
+    }
+    .glass-input:focus {
+      border-color: rgba(255, 23, 68, 0.4);
+      box-shadow: 0 0 0 4px rgba(255, 23, 68, 0.08);
+      outline: none;
+    }
+    .glass-input.select-arrow {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px 10px;
+    }
+    
+    .btn-cancel-modal {
+      background: none;
+      border: 1px solid var(--utp-border);
+      border-radius: 30px;
+      color: #475569;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn-cancel-modal:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+    
+    .animate-fade {
+      animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .spin-slow {
+      animation: spin 8s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  
