@@ -29,8 +29,13 @@ interface SidebarLink {
       <!-- Sidebar -->
       <aside class="app-sidebar" [class.open]="isSidebarOpen()">
         <div class="sidebar-brand">
-          <i class="bi bi-star-fill text-gold me-2"></i>
-          <span>UTP+Recommends</span>
+          <div class="brand">
+            <span class="logo-box">U</span>
+            <span class="logo-box">T</span>
+            <span class="logo-box">P</span>
+            <span class="logo-plus">+</span>
+            <span class="logo-text">Recommends</span>
+          </div>
         </div>
 
         <div class="user-profile-summary">
@@ -126,13 +131,52 @@ interface SidebarLink {
     }
 
     .sidebar-brand {
-      padding: 24px;
-      font-size: 1.3rem;
-      font-weight: 700;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--utp-border-soft);
       display: flex;
       align-items: center;
-      color: var(--utp-primary);
-      border-bottom: 1px solid var(--utp-border-soft);
+      overflow: hidden;
+    }
+    .sidebar-brand .brand {
+      display: flex;
+      align-items: center;
+      gap: 1.5px;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
+    .sidebar-brand .logo-box {
+      background: #000000;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 0.9rem;
+      width: 21px;
+      height: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      line-height: 1;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .sidebar-brand .logo-plus {
+      color: #FF1744;
+      font-weight: 900;
+      font-size: 1.2rem;
+      margin: 0 2px;
+      line-height: 1;
+      animation: pulseGlowSidebar 3s infinite ease-in-out;
+      display: inline-block;
+    }
+    .sidebar-brand .logo-text {
+      color: #000000;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.7px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    @keyframes pulseGlowSidebar {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px var(--utp-primary)); }
+      50% { transform: scale(1.15); filter: drop-shadow(0 0 4px var(--utp-primary)); }
     }
 
     .user-profile-summary {

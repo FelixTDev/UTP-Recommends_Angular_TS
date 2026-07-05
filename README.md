@@ -50,7 +50,7 @@ Organizacion funcional:
 - Node.js 20 o superior recomendado
 - npm instalado
 - Angular CLI disponible a traves de dependencias del proyecto
-- Backend Spring Boot ejecutandose en `http://localhost:8080`
+- Backend Spring Boot ejecutandose en `http://localhost:8081`
 
 ## 5. Instalacion
 
@@ -69,10 +69,10 @@ Archivo de entorno actual:
 Configuracion actual de API:
 
 ```ts
-apiUrl: 'http://localhost:8080/api'
+apiUrl: 'http://localhost:8081/api'
 ```
 
-Esto significa que el frontend espera que el backend este levantado localmente en el puerto `8080`.
+Esto significa que el frontend espera que el backend este levantado localmente en el puerto `8081`.
 
 ## 7. Como ejecutar el frontend
 
@@ -299,8 +299,8 @@ npm test
 
 Para demostrar correctamente el avance:
 
-1. levantar primero el backend en `http://localhost:8080`;
-2. verificar que el frontend apunte a `http://localhost:8080/api`;
+1. levantar primero el backend en `http://localhost:8081`;
+2. verificar que el frontend apunte a `http://localhost:8081/api`;
 3. levantar luego Angular en `http://localhost:4200`;
 4. probar rutas publicas;
 5. probar login y redireccion por rol;

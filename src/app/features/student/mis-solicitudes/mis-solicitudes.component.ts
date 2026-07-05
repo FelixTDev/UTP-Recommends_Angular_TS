@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { StudentService } from '../../../core/services/student.service';
 import { SolicitudResponse } from '../../../core/models/student.models';
 import { StatusBadgePipe } from '../../../shared/pipes/status-badge.pipe';
@@ -142,6 +142,7 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
 })
 export class MisSolicitudesComponent implements OnInit {
   private readonly studentService = inject(StudentService);
+  private readonly router = inject(Router);
 
   readonly solicitudes = signal<SolicitudResponse[]>([]);
   readonly isLoading = signal<boolean>(true);
@@ -167,7 +168,7 @@ export class MisSolicitudesComponent implements OnInit {
   }
 
   onSendFirstRequest(): void {
-    window.location.href = '/estudiante/solicitudes/nueva';
+    this.router.navigate(['/estudiante/solicitudes/nueva']);
   }
 
   changePage(page: number): void {

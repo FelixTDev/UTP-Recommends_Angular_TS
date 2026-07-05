@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, shareReplay, finalize } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, RegisterRequest, ChangePasswordRequest, AuthResponse, CurrentUserResponse } from '../models/auth.models';
 import { StorageService } from '../services/storage.service';
@@ -13,6 +13,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly storageService = inject(StorageService);
   private readonly router = inject(Router);
+  private currentUserRequest$: Observable<CurrentUserResponse> | null = null;
 
   // Core signals for auth state
   readonly currentUser = signal<CurrentUserResponse | null>(null);
@@ -26,16 +27,7 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials).pipe(
       tap((res) => {
-        this.storageService.saveToken(res.token);
-        this.currentUser.set({
-          userId: res.userId,
-          email: '', // will be populated by /me or token data
-          rol: res.rol,
-          estado: 'ACTIVO',
-          nombres: res.nombreCompleto.split(' ')[0] || '',
-          apellidos: res.nombreCompleto.split(' ').slice(1).join(' ') || ''
-        });
-        this.fetchCurrentUser().subscribe();
+        this.establishSession(res);
       })
     );
   }
@@ -43,12 +35,8 @@ export class AuthService {
   register(student: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, student).pipe(
       tap((res) => {
-        this.storageService.saveToken(res.token);
-        this.currentUser.set({
-          userId: res.userId,
+        this.establishSession(res, {
           email: student.email,
-          rol: res.rol,
-          estado: 'ACTIVO',
           nombres: student.nombres,
           apellidos: student.apellidos
         });
@@ -61,11 +49,19 @@ export class AuthService {
   }
 
   fetchCurrentUser(): Observable<CurrentUserResponse> {
-    return this.http.get<CurrentUserResponse>(`${environment.apiUrl}/auth/me`).pipe(
-      tap((user) => {
-        this.currentUser.set(user);
-      })
-    );
+    if (!this.currentUserRequest$) {
+      this.currentUserRequest$ = this.http.get<CurrentUserResponse>(`${environment.apiUrl}/auth/me`).pipe(
+        tap((user) => {
+          this.currentUser.set(user);
+        }),
+        finalize(() => {
+          this.currentUserRequest$ = null;
+        }),
+        shareReplay(1)
+      );
+    }
+
+    return this.currentUserRequest$;
   }
 
   logout(): void {
@@ -74,28 +70,87 @@ export class AuthService {
     this.router.navigate(['/auth/login']);
   }
 
-  private restoreSession(): void {
-    const token = this.storageService.getToken();
-    if (token && !this.storageService.isTokenExpired()) {
-      const decoded = this.storageService.getDecodedToken();
-      if (decoded) {
-        // Build basic current user from token before fetching fresh info
-        this.currentUser.set({
-          userId: this.storageService.getUserId() || 0,
-          email: decoded.sub || '',
-          rol: this.storageService.getUserRole() || '',
-          estado: decoded.estado || 'ACTIVO',
-          nombres: decoded.nombres || '',
-          apellidos: decoded.apellidos || ''
-        });
-        
-        // Fetch fresh info from backend
-        this.fetchCurrentUser().subscribe({
-          error: () => this.logout() // If token is invalid on server, log out
-        });
-      }
-    } else {
-      this.storageService.clearSession();
+  ensureAuthenticatedSession(): boolean {
+    if (this.isAuthenticated()) {
+      return true;
     }
+
+    if (!this.hasValidPersistedSession()) {
+      return false;
+    }
+
+    return this.hydrateCurrentUserFromToken();
+  }
+
+  hasValidPersistedSession(): boolean {
+    const token = this.storageService.getToken();
+    if (!token || this.storageService.isTokenExpired()) {
+      this.storageService.clearSession();
+      return false;
+    }
+
+    return this.storageService.getDecodedToken() !== null;
+  }
+
+  private restoreSession(): void {
+    if (!this.ensureAuthenticatedSession()) {
+      this.storageService.clearSession();
+      return;
+    }
+
+    this.fetchCurrentUser().subscribe({
+      error: () => {
+        // Keep the locally restorable session on transient failures.
+        // Invalid server-side sessions are handled centrally by the HTTP error interceptor.
+      }
+    });
+  }
+
+  private establishSession(
+    response: AuthResponse,
+    fallback?: { email?: string; nombres?: string; apellidos?: string }
+  ): void {
+    this.storageService.saveToken(response.token);
+    this.currentUser.set(this.buildCurrentUserFromToken(fallback, response));
+    this.fetchCurrentUser().subscribe({
+      error: () => {
+        // Invalid auth responses will surface through the HTTP interceptor on the failing request.
+      }
+    });
+  }
+
+  private hydrateCurrentUserFromToken(): boolean {
+    const nextUser = this.buildCurrentUserFromToken();
+    if (!nextUser) {
+      this.storageService.clearSession();
+      return false;
+    }
+
+    this.currentUser.set(nextUser);
+    return true;
+  }
+
+  private buildCurrentUserFromToken(
+    fallback?: { email?: string; nombres?: string; apellidos?: string },
+    response?: AuthResponse
+  ): CurrentUserResponse | null {
+    const decoded = this.storageService.getDecodedToken();
+    if (!decoded) {
+      return null;
+    }
+
+    const rol = this.storageService.getUserRole() || response?.rol || '';
+    const nombres = decoded.nombres || fallback?.nombres || response?.nombreCompleto.split(' ')[0] || '';
+    const apellidos =
+      decoded.apellidos || fallback?.apellidos || response?.nombreCompleto.split(' ').slice(1).join(' ') || '';
+
+    return {
+      userId: this.storageService.getUserId() || response?.userId || 0,
+      email: decoded.sub || fallback?.email || '',
+      rol,
+      estado: decoded.estado || 'ACTIVO',
+      nombres,
+      apellidos
+    };
   }
 }
