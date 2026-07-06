@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -23,6 +23,7 @@ export class NuevaResenaComponent implements OnInit {
   private readonly studentService = inject(StudentService);
   private readonly publicService = inject(PublicService);
   private readonly uiService = inject(UiService);
+  private readonly elementRef = inject(ElementRef);
 
   readonly reviewForm = this.fb.group({
     searchText: [''],
@@ -52,6 +53,7 @@ export class NuevaResenaComponent implements OnInit {
     this.loadCriteria(() => {
       this.checkQueryParams();
     });
+    this.loadDefaultSearchOptions();
   }
 
   loadCriteria(callback?: () => void): void {
@@ -103,11 +105,26 @@ export class NuevaResenaComponent implements OnInit {
     });
   }
 
+  loadDefaultSearchOptions(): void {
+    this.studentService.buscarCursoDocenteActivos().subscribe({
+      next: (res) => {
+        this.searchOptions.set(res);
+      }
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showDropdown.set(false);
+    }
+  }
+
   onSearchInput(event: any): void {
     const val = event.target.value;
     if (!val || val.trim().length < 2) {
-      this.searchOptions.set([]);
-      this.showDropdown.set(false);
+      this.loadDefaultSearchOptions();
+      this.showDropdown.set(true);
       return;
     }
 
@@ -122,12 +139,14 @@ export class NuevaResenaComponent implements OnInit {
   selectOption(opt: ActiveCourseTeacherOptionResponse): void {
     this.selectedOption.set(opt);
     this.reviewForm.patchValue({ searchText: '' });
-    this.searchOptions.set([]);
+    // Keep searchOptions loaded with default list for next time they open it
+    this.loadDefaultSearchOptions();
     this.showDropdown.set(false);
   }
 
   clearSelection(): void {
     this.selectedOption.set(null);
+    this.loadDefaultSearchOptions();
   }
 
   getStarControl(index: number): FormControl {
