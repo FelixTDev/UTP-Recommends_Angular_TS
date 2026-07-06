@@ -5,4 +5,19 @@
     .border-start-indigo {
       border-left: 3px solid var(--primary-color) !important;
     }
+
+    .case-number-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: var(--utp-surface-soft);
+      border: 1px solid var(--utp-border-soft);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
   
