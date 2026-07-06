@@ -11,6 +11,7 @@ import {
   CriterioResponse 
 } from '../../../core/models/admin.models';
 import { UiService } from '../../../core/services/ui.service';
+import { buildSuggestedTeacherName, buildSuggestedTeacherSearchText } from '../../../core/utils/suggested-teacher-name.util';
 import { StatusBadgePipe } from '../../../shared/pipes/status-badge.pipe';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
@@ -64,7 +65,7 @@ export class ModeracionSolicitudesComponent implements OnInit {
     if (!term) return list;
     return list.filter(sol => 
       (sol.requestedData.nombreCursoSugerido && sol.requestedData.nombreCursoSugerido.toLowerCase().includes(term)) ||
-      (sol.requestedData.nombreDocenteSugerido && sol.requestedData.nombreDocenteSugerido.toLowerCase().includes(term)) ||
+      buildSuggestedTeacherSearchText(sol.requestedData).includes(term) ||
       sol.comentario.toLowerCase().includes(term) ||
       sol.estudiante.nombreCompleto.toLowerCase().includes(term)
     );
@@ -161,6 +162,10 @@ export class ModeracionSolicitudesComponent implements OnInit {
   setStarValue(index: number, val: number): void {
     this.ratingsFormArray.at(index).setValue(val);
     this.ratingsFormArray.at(index).markAsDirty();
+  }
+
+  getSuggestedTeacherName(sol: ModeracionSolicitudResponse): string {
+    return buildSuggestedTeacherName(sol.requestedData);
   }
 
   confirmApprove(sol: ModeracionSolicitudResponse): void {

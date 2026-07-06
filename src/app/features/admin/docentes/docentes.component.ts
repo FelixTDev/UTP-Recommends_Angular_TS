@@ -92,14 +92,16 @@ export class DocentesComponent implements OnInit {
     this.docenteForm.reset();
   }
 
-  inactivarDocente(doc: DocenteResponse): void {
-    const msg = `¿Estás seguro de que deseas inactivar el docente "${doc.nombres} ${doc.apellidos}"?`;
+  toggleEstado(doc: DocenteResponse): void {
+    const nuevoEstado = doc.estado === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO';
+    const accion = nuevoEstado === 'ACTIVO' ? 'activar' : 'inactivar';
+    const msg = `¿Estás seguro de que deseas ${accion} el docente "${doc.nombres} ${doc.apellidos}"?`;
     
-    this.uiService.confirm('Inactivar Docente', msg).subscribe((confirmed) => {
+    this.uiService.confirm(`${nuevoEstado === 'ACTIVO' ? 'Activar' : 'Inactivar'} Docente`, msg).subscribe((confirmed) => {
       if (confirmed) {
-        this.adminService.inactivarDocente(doc.id).subscribe({
+        this.adminService.cambiarEstadoDocente(doc.id, { estado: nuevoEstado }).subscribe({
           next: () => {
-            this.uiService.showSuccess('Docente inactivada con éxito.');
+            this.uiService.showSuccess(`Docente ${accion}ado con éxito.`);
             this.loadDocentes();
           }
         });

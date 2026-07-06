@@ -160,6 +160,8 @@ export interface RequestedData {
   nombreCursoSugerido?: string;
   carreraSugeridaId?: number;
   carreraSugeridaNombre?: string;
+  nombresDocenteSugerido?: string;
+  apellidosDocenteSugerido?: string;
   nombreDocenteSugerido?: string;
 }
 
@@ -189,4 +191,16 @@ export interface RechazarSolicitudRequest {
 
 export interface MotivoRechazoRequest {
   motivoRechazo: string;
+}
+
+export interface CarreraEstadoRequest {
+  estado: string;
+}
+
+export interface CursoEstadoRequest {
+  estado: string;
+}
+
+export interface DocenteEstadoRequest {
+  estado: string;
 }

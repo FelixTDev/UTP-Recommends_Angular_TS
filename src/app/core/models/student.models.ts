@@ -90,6 +90,8 @@ export interface SolicitudCreateRequest {
   tipo: string; // 'CURSO_NUEVO', 'DOCENTE_NUEVO', 'AMBOS'
   nombreCursoSugerido?: string;
   carreraSugeridaId?: number;
+  nombresDocenteSugerido?: string;
+  apellidosDocenteSugerido?: string;
   nombreDocenteSugerido?: string;
   comentario: string;
 }
@@ -99,6 +101,8 @@ export interface SolicitudResponse {
   tipo: string;
   estado: string;
   nombreCursoSugerido?: string;
+  nombresDocenteSugerido?: string;
+  apellidosDocenteSugerido?: string;
   nombreDocenteSugerido?: string;
   comentario: string;
   motivoRechazo?: string;

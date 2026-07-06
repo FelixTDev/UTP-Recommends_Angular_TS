@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { StudentService } from '../../../core/services/student.service';
 import { SolicitudResponse } from '../../../core/models/student.models';
+import { buildSuggestedTeacherName } from '../../../core/utils/suggested-teacher-name.util';
 import { StatusBadgePipe } from '../../../shared/pipes/status-badge.pipe';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { LoadingSkeletonComponent } from '../../../shared/components/loading-skeleton/loading-skeleton.component';
@@ -54,5 +55,9 @@ export class MisSolicitudesComponent implements OnInit {
   changePage(page: number): void {
     this.currentPage.set(page);
     this.loadSolicitudes();
+  }
+
+  getSuggestedTeacherName(sol: SolicitudResponse): string {
+    return buildSuggestedTeacherName(sol);
   }
 }

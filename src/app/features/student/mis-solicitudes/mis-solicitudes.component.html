@@ -1,99 +1,140 @@
+<div class="mis-solicitudes">
+  <!-- Header Section -->
+  <div class="row mb-5 align-items-center">
+    <div class="col-md-8 text-start">
+      <h1 class="h2 fw-bold text-gradient mb-2">Mis Solicitudes</h1>
+      <p class="text-muted-custom mb-0">Listado de solicitudes de nuevos cursos o docentes enviadas al administrador.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+      <a routerLink="/estudiante/solicitudes/nueva" class="btn-primary-glass text-decoration-none d-inline-flex align-items-center gap-2">
+        <i class="bi bi-send"></i>
+        <span>Enviar Solicitud</span>
+      </a>
+    </div>
+  </div>
 
-    <div class="mis-solicitudes">
-      <div class="row mb-4 align-items-center">
-        <div class="col-md-8">
-          <h1 class="h2 fw-bold text-white">Mis Solicitudes</h1>
-          <p class="text-muted-custom">Listado de solicitudes de nuevos cursos o docentes enviadas al administrador.</p>
-        </div>
-        <div class="col-md-4 text-md-end">
-          <a routerLink="/estudiante/solicitudes/nueva" class="btn-primary-glass text-decoration-none">
-            <i class="bi bi-send me-2"></i>Enviar Solicitud
-          </a>
-        </div>
-      </div>
-
-      @if (isLoading()) {
-        <app-loading-skeleton type="list" [count]="3"></app-loading-skeleton>
-      } @else if (solicitudes().length === 0) {
-        <app-empty-state 
-          icon="bi-envelope-open"
-          title="Sin Solicitudes" 
-          description="Aún no has enviado ninguna solicitud para agregar cursos o docentes."
-          actionText="Enviar mi primera solicitud"
-          (action)="onSendFirstRequest()"
-        ></app-empty-state>
-      } @else {
-        <div class="row g-4">
-          @for (sol of solicitudes(); track sol.id) {
-            <div class="col-12">
-              <div class="sol-row-card glass-card">
-                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
-                  <div class="d-flex flex-wrap align-items-center gap-2">
-                    <span class="badge-badge" [class]="(sol.tipo | statusBadge).class">
-                      {{ (sol.tipo | statusBadge).label }}
-                    </span>
-                    @let status = (sol.estado | statusBadge);
-                    <span class="badge-badge" [class]="status.class">{{ status.label }}</span>
-                    <span class="text-muted-custom small ms-2">
-                      <i class="bi bi-clock me-1"></i>{{ sol.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
-                    </span>
-                  </div>
-                  <div class="text-white fw-bold">ID: #{{ sol.id }}</div>
-                </div>
-
-                <!-- Suggestions content details -->
-                <div class="row g-3 mb-3">
-                  @if (sol.nombreCursoSugerido) {
-                    <div class="col-md-6">
-                      <span class="d-block small text-muted-custom">Curso Sugerido:</span>
-                      <strong class="text-white">{{ sol.nombreCursoSugerido }}</strong>
-                    </div>
-                  }
-                  @if (sol.nombreDocenteSugerido) {
-                    <div class="col-md-6">
-                      <span class="d-block small text-muted-custom">Docente Sugerido:</span>
-                      <strong class="text-white">{{ sol.nombreDocenteSugerido }}</strong>
-                    </div>
-                  }
-                </div>
-
-                <div class="comment-block p-3 rounded mb-3 bg-dark-opacity">
-                  <span class="d-block small text-muted-custom mb-1">Comentario adjunto:</span>
-                  <p class="comment-text text-muted-custom mb-0 font-style-italic">"{{ sol.comentario }}"</p>
-                </div>
-
-                @if (sol.estado === 'RECHAZADA' && sol.motivoRechazo) {
-                  <div class="alert alert-danger border-0 bg-danger-opacity text-red p-2.5 rounded mb-0 mt-3 small">
-                    <strong>Motivo de rechazo:</strong> {{ sol.motivoRechazo }}
-                  </div>
-                }
+  <!-- Main Content Area -->
+  @if (isLoading()) {
+    <app-loading-skeleton type="list" [count]="3"></app-loading-skeleton>
+  } @else if (solicitudes().length === 0) {
+    <app-empty-state 
+      icon="bi-envelope-open"
+      title="Sin Solicitudes" 
+      description="Aún no has enviado ninguna solicitud para agregar cursos o docentes."
+      actionText="Enviar mi primera solicitud"
+      (action)="onSendFirstRequest()"
+    ></app-empty-state>
+  } @else {
+    <div class="row g-4">
+      @for (sol of solicitudes(); track sol.id) {
+        <div class="col-12 col-lg-6">
+          <div class="sol-row-card glass-card d-flex flex-column h-100">
+            <!-- Card Header: Badges & ID -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3 pb-2 border-bottom border-light-subtle">
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <!-- Request Type Badge -->
+                <span class="badge-type-pill" [class]="(sol.tipo | statusBadge).class">
+                  <i class="bi" 
+                     [class.bi-book-fill]="sol.tipo === 'CURSO_NUEVO'" 
+                     [class.bi-person-badge-fill]="sol.tipo === 'DOCENTE_NUEVO'" 
+                     [class.bi-journals]="sol.tipo === 'AMBOS'"></i>
+                  {{ (sol.tipo | statusBadge).label }}
+                </span>
+                
+                <!-- Request Status Badge -->
+                <span class="badge-status-pill" [class]="'status-' + sol.estado.toLowerCase()">
+                  <span class="status-dot"></span>
+                  {{ (sol.estado | statusBadge).label }}
+                </span>
               </div>
+              <div class="request-id-tag">ID: #{{ sol.id }}</div>
             </div>
-          }
-        </div>
 
-        <!-- Pagination -->
-        @if (totalPages() > 1) {
-          <div class="pagination-container d-flex justify-content-center mt-5">
-            <button 
-              class="btn-secondary-glass py-2 px-3 me-2" 
-              [disabled]="currentPage() === 0"
-              (click)="changePage(currentPage() - 1)"
-            >
-              <i class="bi bi-chevron-left"></i>
-            </button>
-            <span class="align-self-center mx-3 text-muted-custom">
-              Pág. <strong>{{ currentPage() + 1 }}</strong> de {{ totalPages() }}
-            </span>
-            <button 
-              class="btn-secondary-glass py-2 px-3" 
-              [disabled]="currentPage() >= totalPages() - 1"
-              (click)="changePage(currentPage() + 1)"
-            >
-              <i class="bi bi-chevron-right"></i>
-            </button>
+            <!-- Suggestions Details Vertical Stack -->
+            <div class="d-flex flex-column gap-2.5 my-2 flex-grow-1">
+              @if (sol.nombreCursoSugerido) {
+                <div class="suggestion-item-card">
+                  <div class="item-icon-wrap bg-info-opacity">
+                    <i class="bi bi-book-fill text-info"></i>
+                  </div>
+                  <div class="text-start">
+                    <span class="d-block small text-muted-custom">Curso Sugerido</span>
+                    <strong class="text-dark-title font-size-md">{{ sol.nombreCursoSugerido }}</strong>
+                  </div>
+                </div>
+              }
+              @if (getSuggestedTeacherName(sol)) {
+                <div class="suggestion-item-card">
+                  <div class="item-icon-wrap bg-primary-opacity">
+                    <i class="bi bi-person-badge-fill text-primary"></i>
+                  </div>
+                  <div class="text-start">
+                    <span class="d-block small text-muted-custom">Docente Sugerido</span>
+                    <strong class="text-dark-title font-size-md">{{ getSuggestedTeacherName(sol) }}</strong>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Quoted comment text -->
+            <div class="comment-quote-box my-3 text-start">
+              <i class="bi bi-quote quote-icon"></i>
+              <p class="comment-text mb-0">
+                {{ sol.comentario }}
+              </p>
+            </div>
+
+            <!-- Card Footer: Time Stamp -->
+            <div class="d-flex align-items-center justify-content-between mt-2 pt-2 border-top border-light-subtle font-size-sm">
+              <span class="date-display text-muted-custom">
+                <i class="bi bi-clock me-1"></i>{{ sol.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+
+            <!-- Rejection Callout Box -->
+            @if (sol.estado === 'RECHAZADA' && sol.motivoRechazo) {
+              <div class="rejection-callout mt-3">
+                <div class="callout-header">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <strong>Motivo de rechazo de la solicitud</strong>
+                </div>
+                <div class="callout-body">
+                  {{ sol.motivoRechazo }}
+                </div>
+              </div>
+            }
           </div>
-        }
+        </div>
       }
     </div>
-  
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination-container d-flex justify-content-center align-items-center mt-5">
+        <div class="pagination-capsule d-flex align-items-center">
+          <button 
+            class="btn-pagination-nav me-2" 
+            [disabled]="currentPage() === 0"
+            (click)="changePage(currentPage() - 1)"
+            aria-label="Página anterior"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          
+          <span class="pagination-info text-muted-custom mx-3">
+            Pág. <strong>{{ currentPage() + 1 }}</strong> de {{ totalPages() }}
+          </span>
+          
+          <button 
+            class="btn-pagination-nav ms-2" 
+            [disabled]="currentPage() >= totalPages() - 1"
+            (click)="changePage(currentPage() + 1)"
+            aria-label="Página siguiente"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

@@ -1,9 +1,9 @@
 
     <div class="nueva-solicitud">
-      <div class="row mb-4">
-        <div class="col">
-          <h1 class="h2 fw-bold text-white">Solicitar Curso / Docente</h1>
-          <p class="text-muted-custom">
+      <div class="row mb-5">
+        <div class="col text-start">
+          <h1 class="h2 fw-bold text-gradient mb-2">Solicitar Curso / Docente</h1>
+          <p class="text-muted-custom mb-0">
             ¿No encuentras el curso o docente en el sistema? Solicita su creación al administrador y adjunta tu reseña.
           </p>
         </div>
@@ -18,7 +18,7 @@
               <div class="glass-form-group">
                 <label class="glass-form-label">¿Qué deseas sugerir agregar?</label>
                 <select 
-                  class="glass-input" 
+                  class="glass-input select-arrow" 
                   formControlName="tipo"
                   [class.is-invalid]="submitted() && f['tipo'].errors"
                 >
@@ -53,7 +53,7 @@
                   <div class="col-md-5">
                     <div class="glass-form-group">
                       <label class="glass-form-label">Carrera Perteneciente (Opcional)</label>
-                      <select class="glass-input" formControlName="carreraSugeridaId">
+                      <select class="glass-input select-arrow" formControlName="carreraSugeridaId">
                         <option value="">Curso de Estudios Generales</option>
                         @for (carrera of carreras(); track carrera.id) {
                           <option [value]="carrera.id">{{ carrera.nombre }}</option>
@@ -67,18 +67,33 @@
               <!-- Teacher Fields (Conditionally Required) -->
               @if (showTeacherFields()) {
                 <div class="row border-start-indigo ms-1 ps-3 mb-3">
-                  <div class="col-12">
+                  <div class="col-md-6">
                     <div class="glass-form-group">
-                      <label class="glass-form-label">Nombre Completo del Docente Sugerido</label>
+                      <label class="glass-form-label">Nombres del Docente Sugerido</label>
                       <input 
                         type="text" 
                         class="glass-input" 
-                        placeholder="Ej: Mag. Juan Pérez Quispe"
-                        formControlName="nombreDocenteSugerido"
-                        [class.is-invalid]="submitted() && f['nombreDocenteSugerido'].errors"
+                        placeholder="Ej: Juan Víctor"
+                        formControlName="nombresDocenteSugerido"
+                        [class.is-invalid]="submitted() && f['nombresDocenteSugerido']?.errors"
                       />
-                      @if (submitted() && f['nombreDocenteSugerido'].errors) {
-                        <div class="invalid-feedback">El nombre del docente es requerido.</div>
+                      @if (submitted() && f['nombresDocenteSugerido']?.errors) {
+                        <div class="invalid-feedback">Los nombres son requeridos.</div>
+                      }
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="glass-form-group">
+                      <label class="glass-form-label">Apellidos del Docente Sugerido</label>
+                      <input 
+                        type="text" 
+                        class="glass-input" 
+                        placeholder="Ej: Mallqui Alvarado"
+                        formControlName="apellidosDocenteSugerido"
+                        [class.is-invalid]="submitted() && f['apellidosDocenteSugerido']?.errors"
+                      />
+                      @if (submitted() && f['apellidosDocenteSugerido']?.errors) {
+                        <div class="invalid-feedback">Los apellidos son requeridos.</div>
                       }
                     </div>
                   </div>
@@ -123,14 +138,45 @@
           </div>
         </div>
 
-        <div class="col-lg-4 mt-4 mt-lg-0">
-          <div class="glass-card">
-            <h3 class="h5 fw-bold text-white mb-3"><i class="bi bi-info-circle text-gold me-2"></i>¿Qué pasa después?</h3>
+        <div class="col-lg-4 mt-4 mt-lg-0 text-start">
+          <!-- Flow Card -->
+          <div class="glass-card mb-4">
+            <h3 class="h5 fw-bold text-dark-title mb-3"><i class="bi bi-info-circle-fill text-gold me-2"></i>¿Qué pasa después?</h3>
             <ol class="text-muted-custom small ps-3 mb-0">
-              <li class="mb-2">El administrador evaluará tu sugerencia y el comentario adjunto.</li>
-              <li class="mb-2"><strong>Aprobación:</strong> El administrador registrará el curso/docente formalmente y la reseña que escribiste se publicará automáticamente en estado <strong>Aprobada</strong>.</li>
-              <li class="mb-2"><strong>Rechazo:</strong> Si el curso/docente ya existe o el comentario infringe políticas, se rechazará informando el motivo.</li>
+              <li class="mb-2.5">El administrador evaluará tu sugerencia y el comentario adjunto.</li>
+              <li class="mb-2.5"><strong>Aprobación:</strong> El administrador registrará el curso/docente formalmente y la reseña que escribiste se publicará automáticamente en estado <strong>Aprobada</strong>.</li>
+              <li class="mb-0"><strong>Rechazo:</strong> Si el curso/docente ya existe o infringe políticas, se rechazará informando el motivo.</li>
             </ol>
+          </div>
+
+          <!-- Filling Guide Card -->
+          <div class="glass-card border-top-success">
+            <h3 class="h5 fw-bold text-dark-title mb-4">
+              Guía de Llenado por Caso
+            </h3>
+            <ul class="list-unstyled ps-0 mb-0">
+              <li class="d-flex align-items-start mb-3.5">
+                <span class="case-number-badge text-info me-2.5">1</span>
+                <div class="small text-muted-custom">
+                  <strong>Caso 1: Curso Nuevo</strong>
+                  <div class="mt-1">Escribe el nombre oficial del curso (ej: Cálculo II) y su carrera. En la reseña, especifica el ciclo o código de asignatura.</div>
+                </div>
+              </li>
+              <li class="d-flex align-items-start mb-3.5">
+                <span class="case-number-badge text-primary me-2.5">2</span>
+                <div class="small text-muted-custom">
+                  <strong>Caso 2: Docente Nuevo</strong>
+                  <div class="mt-1">Ingresa nombres y apellidos reales por separado (sin títulos como Dr. o Mag.). Explica su metodología en el comentario.</div>
+                </div>
+              </li>
+              <li class="d-flex align-items-start">
+                <span class="case-number-badge text-purple me-2.5">3</span>
+                <div class="small text-muted-custom">
+                  <strong>Caso 3: Ambos Nuevos</strong>
+                  <div class="mt-1">Asegúrate de que el curso sugerido y el docente correspondan al mismo programa de estudio. Fundamenta su relación.</div>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

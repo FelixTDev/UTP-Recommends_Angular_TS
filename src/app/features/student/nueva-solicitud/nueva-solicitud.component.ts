@@ -25,7 +25,8 @@ export class NuevaSolicitudComponent implements OnInit {
     tipo: ['CURSO_NUEVO', [Validators.required]],
     nombreCursoSugerido: [''],
     carreraSugeridaId: [''],
-    nombreDocenteSugerido: [''],
+    nombresDocenteSugerido: [''],
+    apellidosDocenteSugerido: [''],
     comentario: ['', [Validators.required, Validators.minLength(10)]]
   });
 
@@ -58,28 +59,32 @@ export class NuevaSolicitudComponent implements OnInit {
 
   updateConditionalValidators(tipo: string): void {
     const courseCtrl = this.solicitudForm.get('nombreCursoSugerido');
-    const teacherCtrl = this.solicitudForm.get('nombreDocenteSugerido');
+    const teacherNombresCtrl = this.solicitudForm.get('nombresDocenteSugerido');
+    const teacherApellidosCtrl = this.solicitudForm.get('apellidosDocenteSugerido');
 
     if (tipo === 'CURSO_NUEVO') {
       this.showCourseFields.set(true);
       this.showTeacherFields.set(false);
       courseCtrl?.setValidators([Validators.required]);
-      teacherCtrl?.clearValidators();
+      teacherNombresCtrl?.clearValidators();
+      teacherApellidosCtrl?.clearValidators();
     } else if (tipo === 'DOCENTE_NUEVO') {
       this.showCourseFields.set(false);
       this.showTeacherFields.set(true);
       courseCtrl?.clearValidators();
-      teacherCtrl?.setValidators([Validators.required]);
+      teacherNombresCtrl?.setValidators([Validators.required]);
+      teacherApellidosCtrl?.setValidators([Validators.required]);
     } else if (tipo === 'AMBOS') {
       this.showCourseFields.set(true);
       this.showTeacherFields.set(true);
       courseCtrl?.setValidators([Validators.required]);
-      teacherCtrl?.setValidators([Validators.required]);
+      teacherNombresCtrl?.setValidators([Validators.required]);
+      teacherApellidosCtrl?.setValidators([Validators.required]);
     }
 
-    // Refresh controls validation status
     courseCtrl?.updateValueAndValidity();
-    teacherCtrl?.updateValueAndValidity();
+    teacherNombresCtrl?.updateValueAndValidity();
+    teacherApellidosCtrl?.updateValueAndValidity();
   }
 
   onSubmit(): void {
@@ -89,11 +94,13 @@ export class NuevaSolicitudComponent implements OnInit {
     this.isLoading.set(true);
 
     const formVal = this.solicitudForm.value;
+
     const payload = {
       tipo: formVal.tipo,
       nombreCursoSugerido: this.showCourseFields() ? formVal.nombreCursoSugerido : undefined,
       carreraSugeridaId: this.showCourseFields() && formVal.carreraSugeridaId ? Number(formVal.carreraSugeridaId) : undefined,
-      nombreDocenteSugerido: this.showTeacherFields() ? formVal.nombreDocenteSugerido : undefined,
+      nombresDocenteSugerido: this.showTeacherFields() ? formVal.nombresDocenteSugerido?.trim() : undefined,
+      apellidosDocenteSugerido: this.showTeacherFields() ? formVal.apellidosDocenteSugerido?.trim() : undefined,
       comentario: formVal.comentario
     };
 

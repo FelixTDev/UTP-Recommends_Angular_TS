@@ -140,14 +140,16 @@ export class CursosComponent implements OnInit {
     this.cursoForm.reset();
   }
 
-  inactivarCurso(curso: CursoResponse): void {
-    const msg = `¿Estás seguro de que deseas inactivar el curso "${curso.nombre}"?`;
+  toggleEstado(curso: CursoResponse): void {
+    const nuevoEstado = curso.estado === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO';
+    const accion = nuevoEstado === 'ACTIVO' ? 'activar' : 'inactivar';
+    const msg = `¿Estás seguro de que deseas ${accion} el curso "${curso.nombre}"?`;
     
-    this.uiService.confirm('Inactivar Curso', msg).subscribe((confirmed) => {
+    this.uiService.confirm(`${nuevoEstado === 'ACTIVO' ? 'Activar' : 'Inactivar'} Curso`, msg).subscribe((confirmed) => {
       if (confirmed) {
-        this.adminService.inactivarCurso(curso.id).subscribe({
+        this.adminService.cambiarEstadoCurso(curso.id, { estado: nuevoEstado }).subscribe({
           next: () => {
-            this.uiService.showSuccess('Curso inactivado con éxito.');
+            this.uiService.showSuccess(`Curso ${accion}ado con éxito.`);
             this.loadCursos();
           }
         });

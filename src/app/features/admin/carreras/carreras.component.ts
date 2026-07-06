@@ -89,14 +89,16 @@ export class CarrerasComponent implements OnInit {
     this.carreraForm.reset();
   }
 
-  inactivarCarrera(carrera: CarreraResponse): void {
-    const msg = `¿Estás seguro de que deseas inactivar la carrera profesional "${carrera.nombre}"?`;
+  toggleEstado(carrera: CarreraResponse): void {
+    const nuevoEstado = carrera.estado === 'ACTIVA' ? 'INACTIVA' : 'ACTIVA';
+    const accion = nuevoEstado === 'ACTIVA' ? 'activar' : 'inactivar';
+    const msg = `¿Estás seguro de que deseas ${accion} la carrera profesional "${carrera.nombre}"?`;
     
-    this.uiService.confirm('Inactivar Carrera', msg).subscribe((confirmed) => {
+    this.uiService.confirm(`${nuevoEstado === 'ACTIVA' ? 'Activar' : 'Inactivar'} Carrera`, msg).subscribe((confirmed) => {
       if (confirmed) {
-        this.adminService.inactivarCarrera(carrera.id).subscribe({
+        this.adminService.cambiarEstadoCarrera(carrera.id, { estado: nuevoEstado }).subscribe({
           next: () => {
-            this.uiService.showSuccess('Carrera inactivada con éxito.');
+            this.uiService.showSuccess(`Carrera ${accion}ada con éxito.`);
             this.loadCarreras();
           }
         });

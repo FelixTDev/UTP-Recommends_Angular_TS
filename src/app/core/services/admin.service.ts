@@ -10,10 +10,13 @@ import {
   UsuarioEstadoRequest,
   CarreraResponse,
   CarreraRequest,
+  CarreraEstadoRequest,
   CursoResponse,
   CursoCreateRequest,
+  CursoEstadoRequest,
   DocenteResponse,
   DocenteRequest,
+  DocenteEstadoRequest,
   CursoDocenteResponse,
   CursoDocenteRequest,
   CursoDocenteEstadoRequest,
@@ -79,6 +82,10 @@ export class AdminService {
     return this.http.delete<CarreraResponse>(`${environment.apiUrl}/admin/carreras/${id}`);
   }
 
+  cambiarEstadoCarrera(id: number, request: CarreraEstadoRequest): Observable<CarreraResponse> {
+    return this.http.patch<CarreraResponse>(`${environment.apiUrl}/admin/carreras/${id}/estado`, request);
+  }
+
   // Cursos CRUD
   listarCursos(): Observable<CursoResponse[]> {
     return this.http.get<CursoResponse[]>(`${environment.apiUrl}/admin/cursos`);
@@ -96,6 +103,10 @@ export class AdminService {
     return this.http.delete<CursoResponse>(`${environment.apiUrl}/admin/cursos/${id}`);
   }
 
+  cambiarEstadoCurso(id: number, request: CursoEstadoRequest): Observable<CursoResponse> {
+    return this.http.patch<CursoResponse>(`${environment.apiUrl}/admin/cursos/${id}/estado`, request);
+  }
+
   // Docentes CRUD
   listarDocentes(): Observable<DocenteResponse[]> {
     return this.http.get<DocenteResponse[]>(`${environment.apiUrl}/admin/docentes`);
@@ -111,6 +122,10 @@ export class AdminService {
 
   inactivarDocente(id: number): Observable<DocenteResponse> {
     return this.http.delete<DocenteResponse>(`${environment.apiUrl}/admin/docentes/${id}`);
+  }
+
+  cambiarEstadoDocente(id: number, request: DocenteEstadoRequest): Observable<DocenteResponse> {
+    return this.http.patch<DocenteResponse>(`${environment.apiUrl}/admin/docentes/${id}/estado`, request);
   }
 
   // Curso-Docente
