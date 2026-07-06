@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 export class StorageService {
   private readonly TOKEN_KEY = 'utp_recommends_token';
 
+  private readonly USER_KEY = 'utp_recommends_user';
+
   saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
@@ -14,8 +16,23 @@ export class StorageService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  saveUser(user: any): void {
+    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+  }
+
+  getUser(): any | null {
+    const userStr = localStorage.getItem(this.USER_KEY);
+    if (!userStr) return null;
+    try {
+      return JSON.parse(userStr);
+    } catch {
+      return null;
+    }
+  }
+
   clearSession(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USER_KEY);
   }
 
   getDecodedToken(): any {

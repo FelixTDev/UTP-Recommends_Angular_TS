@@ -53,6 +53,7 @@ export class AuthService {
       this.currentUserRequest$ = this.http.get<CurrentUserResponse>(`${environment.apiUrl}/auth/me`).pipe(
         tap((user) => {
           this.currentUser.set(user);
+          this.storageService.saveUser(user);
         }),
         finalize(() => {
           this.currentUserRequest$ = null;
@@ -111,7 +112,11 @@ export class AuthService {
     fallback?: { email?: string; nombres?: string; apellidos?: string }
   ): void {
     this.storageService.saveToken(response.token);
-    this.currentUser.set(this.buildCurrentUserFromToken(fallback, response));
+    const user = this.buildCurrentUserFromToken(fallback, response);
+    this.currentUser.set(user);
+    if (user) {
+      this.storageService.saveUser(user);
+    }
     this.fetchCurrentUser().subscribe({
       error: () => {
         // Invalid auth responses will surface through the HTTP interceptor on the failing request.
@@ -120,6 +125,12 @@ export class AuthService {
   }
 
   private hydrateCurrentUserFromToken(): boolean {
+    const savedUser = this.storageService.getUser();
+    if (savedUser) {
+      this.currentUser.set(savedUser);
+      return true;
+    }
+
     const nextUser = this.buildCurrentUserFromToken();
     if (!nextUser) {
       this.storageService.clearSession();
