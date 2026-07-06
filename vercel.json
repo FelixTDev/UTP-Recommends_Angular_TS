@@ -1,0 +1,11 @@
+{
+  "framework": "angular",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/utp-recommends/browser",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
