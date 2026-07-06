@@ -1,181 +1,301 @@
+<div class="nueva-resena">
+  <!-- Header Section -->
+  <div class="row mb-5">
+    <div class="col text-start">
+      <h1 class="h2 fw-bold text-gradient mb-2">
+        {{ isResubmission() ? 'Reenviar Reseña Rechazada' : 'Escribir Nueva Reseña' }}
+      </h1>
+      <p class="text-muted-custom mb-0">
+        {{ isResubmission() ? 'Modifica tu reseña según las observaciones del moderador.' : 'Comparte tu experiencia académica de forma justa y objetiva.' }}
+      </p>
+    </div>
+  </div>
 
-    <div class="nueva-resena">
-      <div class="row mb-4">
-        <div class="col">
-          <h1 class="h2 fw-bold text-white">{{ isResubmission() ? 'Reenviar Reseña Rechazada' : 'Escribir Nueva Reseña' }}</h1>
-          <p class="text-muted-custom">
-            {{ isResubmission() ? 'Modifica tu reseña según las observaciones del moderador.' : 'Comparte tu experiencia académica de forma justa y objetiva.' }}
-          </p>
-        </div>
+  <!-- Rejected Info Callout Box -->
+  @if (isResubmission() && rejectedReason()) {
+    <div class="rejection-callout mb-4">
+      <div class="callout-header">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>Motivo de rechazo del Administrador</strong>
       </div>
+      <div class="callout-body">
+        "{{ rejectedReason() }}"
+      </div>
+    </div>
+  }
 
-      <!-- Rejected Info Box -->
-      @if (isResubmission() && rejectedReason()) {
-        <div class="alert alert-danger border-0 bg-danger-opacity text-red mb-4 p-3 rounded">
-          <h4 class="h6 fw-bold mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>Motivo de Rechazo del Administrador:</h4>
-          <p class="mb-0 small font-style-italic">"{{ rejectedReason() }}"</p>
-        </div>
-      }
+  <!-- Main Content Row -->
+  <div class="row g-4">
+    <!-- Form Column -->
+    <div class="col-lg-8">
+      <div class="glass-card">
+        <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+          
+          <!-- Search Course-Teacher Assignment -->
+          <div class="glass-form-group position-relative text-start">
+            <label class="glass-form-label">Asignación Curso - Docente</label>
 
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="glass-card">
-            <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
-              <!-- Search Course-Teacher Assignment -->
-              <div class="glass-form-group position-relative">
-                <label class="glass-form-label">Asignación Curso - Docente</label>
+            @if (isResubmission()) {
+              <div class="position-relative">
+                <input
+                  type="text"
+                  class="glass-input ps-4"
+                  [value]="selectedOptionName()"
+                  disabled
+                />
+                <i class="bi bi-lock-fill input-icon text-muted"></i>
+              </div>
+              <small class="text-muted-custom mt-1.5 d-block">No se puede cambiar la asignación curso-docente en un reenvío.</small>
+            } @else {
+              <!-- Search box wrapper with search icon -->
+              <div class="search-input-wrapper position-relative">
+                <input
+                  type="text"
+                  class="glass-input ps-5"
+                  placeholder="Busca un docente o curso de la lista..."
+                  formControlName="searchText"
+                  (input)="onSearchInput($event)"
+                  (focus)="showDropdown.set(true)"
+                />
+                <i class="bi bi-search search-icon"></i>
+              </div>
 
-                @if (isResubmission()) {
-                  <input
-                    type="text"
-                    class="glass-input"
-                    [value]="selectedOptionName()"
-                    disabled
-                  />
-                  <small class="text-muted-custom mt-1 d-block">No se puede cambiar el curso-docente en un reenvío.</small>
-                } @else {
-                  <input
-                    type="text"
-                    class="glass-input"
-                    placeholder="Escribe para buscar... (ej: Cálculo, Gómez)"
-                    formControlName="searchText"
-                    (input)="onSearchInput($event)"
-                    (focus)="showDropdown.set(true)"
-                  />
+              <!-- Redirect hint under search box (only if no option is selected) -->
+              @if (!selectedOption()) {
+                <div class="mt-2 text-start font-size-sm search-help-link">
+                  <span class="text-muted-custom">¿No encuentras el curso o docente? </span>
+                  <a routerLink="/estudiante/solicitudes/nueva" class="text-gold text-decoration-none fw-bold">
+                    Solicita su creación aquí <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+              }
 
-                  <!-- Autocomplete Dropdown -->
-                  @if (showDropdown() && searchOptions().length > 0) {
-                    <div class="autocomplete-dropdown glass-card p-0">
+              <!-- Autocomplete Dropdown List -->
+              @if (showDropdown()) {
+                <div class="autocomplete-dropdown glass-card p-0">
+                  @if (searchOptions().length === 0) {
+                    <div class="p-4 text-center text-muted-custom small">
+                      <i class="bi bi-search d-block fs-4 mb-2 text-muted"></i>
+                      No se encontraron asignaciones que coincidan con tu búsqueda.
+                    </div>
+                  } @else {
+                    <div class="dropdown-scroll-container">
                       @for (opt of searchOptions(); track opt.idCursoDocente) {
                         <div
                           class="dropdown-item-custom"
                           (click)="selectOption(opt)"
                         >
-                          <div class="fw-bold text-white">{{ opt.nombreDocente }}</div>
-                          <div class="small text-muted-custom">{{ opt.nombreCurso }} ({{ opt.tipoCurso }})</div>
+                          <div class="fw-bold text-dark-title">{{ opt.nombreDocente }}</div>
+                          <div class="small text-muted-custom d-flex justify-content-between align-items-center mt-1">
+                            <span>{{ opt.nombreCurso }}</span>
+                            <span class="course-type-tag">{{ opt.tipoCurso }}</span>
+                          </div>
                         </div>
                       }
                     </div>
                   }
+                  
+                  <!-- Dropdown Footer redirect link -->
+                  <div class="dropdown-footer-link p-3 text-center bg-light border-top rounded-bottom">
+                    <a routerLink="/estudiante/solicitudes/nueva" class="text-gold small text-decoration-none fw-bold d-flex align-items-center justify-content-center gap-2">
+                      <i class="bi bi-plus-circle-fill"></i>
+                      ¿No encuentras el curso o docente? Solicítalo aquí
+                    </a>
+                  </div>
+                </div>
+              }
 
-                  @if (selectedOption()) {
-                    <div class="selected-option-tag mt-3 p-3 rounded d-flex justify-content-between align-items-center">
-                      <div>
-                        <span class="d-block small text-muted-custom">Asignación Seleccionada:</span>
-                        <strong class="text-white">{{ selectedOption()?.nombreDocente }}</strong>
-                        <span class="mx-2 text-muted">|</span>
-                        <span>{{ selectedOption()?.nombreCurso }}</span>
-                      </div>
-                      <button type="button" class="btn-remove" (click)="clearSelection()">
-                        <i class="bi bi-x-circle-fill"></i>
-                      </button>
+              <!-- Selected Option Panel Card -->
+              @if (selectedOption()) {
+                <div class="selected-assignment-card mt-3 p-3 rounded d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="selected-icon-wrap">
+                      <i class="bi bi-person-check-fill text-primary"></i>
                     </div>
-                  }
+                    <div>
+                      <span class="d-block small text-muted-custom">Asignación Seleccionada:</span>
+                      <strong class="text-dark-title font-size-md">{{ selectedOption()?.nombreDocente }}</strong>
+                      <span class="mx-2 text-muted">|</span>
+                      <span class="text-muted-custom">{{ selectedOption()?.nombreCurso }}</span>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-remove" (click)="clearSelection()" title="Quitar selección">
+                    <i class="bi bi-x-circle-fill"></i>
+                  </button>
+                </div>
+              }
 
-                  @if (submitted() && !selectedOption()) {
-                    <div class="invalid-feedback">Debes buscar y seleccionar un curso y docente de la lista.</div>
-                  }
-                }
-              </div>
+              @if (submitted() && !selectedOption()) {
+                <div class="invalid-feedback text-start">Debes buscar y seleccionar un curso y docente de la lista.</div>
+              }
+            }
+          </div>
 
-              <div class="nav-divider my-4"></div>
+          <div class="nav-divider my-4"></div>
 
-              <!-- Ratings List -->
-              <div class="mb-4">
-                <h3 class="h6 fw-bold text-white mb-3">Calificaciones por Criterio (Obligatorios)</h3>
+          <!-- Ratings Grid List -->
+          <div class="mb-4 text-start">
+            <h3 class="h6 fw-bold text-dark-title mb-3">Calificaciones por Criterio (Obligatorios)</h3>
 
-                @if (activeCriteria().length === 0) {
-                  <p class="text-muted-custom small">Cargando criterios de calificación...</p>
-                } @else {
-                  <div class="criteria-ratings-grid">
-                    @for (crit of activeCriteria(); track crit.id; let i = $index) {
-                      <div class="criteria-rating-row glass-card p-3 mb-3 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
-                        <div>
-                          <h4 class="h6 fw-bold text-white mb-1">{{ crit.nombre }}</h4>
-                          @if (crit.descripcion) {
-                            <p class="small text-muted-custom mb-0">{{ crit.descripcion }}</p>
-                          }
-                        </div>
-                        <div class="mt-3 mt-sm-0">
-                          <app-star-rating
-                            [value]="getStarValue(i)"
-                            (valueChange)="setStarValue(i, $event)"
-                            [showValue]="true"
-                          ></app-star-rating>
-                          @if (submitted() && getStarControl(i).invalid) {
-                            <div class="invalid-feedback text-end">Calificación es requerida.</div>
-                          }
-                        </div>
-                      </div>
-                    }
+            @if (activeCriteria().length === 0) {
+              <p class="text-muted-custom small">Cargando criterios de calificación...</p>
+            } @else {
+              <div class="criteria-ratings-grid">
+                @for (crit of activeCriteria(); track crit.id; let i = $index) {
+                  <div class="criteria-card p-3 mb-3 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                    <div class="pe-sm-3">
+                      <h4 class="h6 fw-bold text-dark-title mb-1">{{ crit.nombre }}</h4>
+                      @if (crit.descripcion) {
+                        <p class="small text-muted-custom mb-0">{{ crit.descripcion }}</p>
+                      }
+                    </div>
+                    <div class="mt-3 mt-sm-0 text-sm-end flex-shrink-0">
+                      <app-star-rating
+                        [value]="getStarValue(i)"
+                        (valueChange)="setStarValue(i, $event)"
+                        [showValue]="true"
+                      ></app-star-rating>
+                      @if (submitted() && getStarControl(i).invalid) {
+                        <div class="invalid-feedback text-sm-end mt-1">Calificación requerida.</div>
+                      }
+                    </div>
                   </div>
                 }
               </div>
+            }
+          </div>
 
-              <!-- Comment Input -->
-              <div class="glass-form-group">
-                <label class="glass-form-label">Comentario Descriptivo</label>
-                <textarea
-                  class="glass-input"
-                  rows="5"
-                  placeholder="Detalla tu experiencia con este docente en este curso específico. Sé respetuoso y constructivo..."
-                  formControlName="comentario"
-                  [class.is-invalid]="submitted() && f['comentario'].errors"
-                ></textarea>
-                @if (submitted() && f['comentario'].errors) {
-                  <div class="invalid-feedback">
-                    @if (f['comentario'].errors['required']) { El comentario es requerido. }
-                    @if (f['comentario'].errors['minlength']) { Comentario debe tener al menos 10 caracteres. }
-                  </div>
-                }
+          <div class="nav-divider my-4"></div>
+
+          <!-- Comment Textarea -->
+          <div class="glass-form-group text-start">
+            <label class="glass-form-label">Comentario Descriptivo</label>
+            <textarea
+              class="glass-input"
+              rows="5"
+              placeholder="Detalla tu experiencia con este docente en este curso específico. Sé respetuoso, constructivo y objetivo..."
+              formControlName="comentario"
+              [class.is-invalid]="submitted() && f['comentario'].errors"
+            ></textarea>
+            @if (submitted() && f['comentario'].errors) {
+              <div class="invalid-feedback text-start">
+                @if (f['comentario'].errors['required']) { El comentario es requerido. }
+                @if (f['comentario'].errors['minlength']) { El comentario debe tener al menos 10 caracteres. }
               </div>
+            }
+          </div>
 
-              <!-- Anonimato Checkbox -->
-              <div class="glass-form-group form-check mb-4">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="esAnonimo"
-                  formControlName="esAnonimo"
-                />
-                <label class="form-check-label text-white ms-2" for="esAnonimo">
-                  Publicar como anónimo
+          <!-- Privacy/Anon Checkbox Card Panel -->
+          <div class="glass-form-group privacy-toggle-panel p-3 rounded mb-4 text-start">
+            <div class="form-check-wrapper">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="esAnonimo"
+                formControlName="esAnonimo"
+              />
+              <div>
+                <label class="form-check-label text-dark-title fw-bold" for="esAnonimo">
+                  Publicar esta reseña de forma anónima
                 </label>
                 <small class="text-muted-custom d-block mt-1">
-                  Tu nombre no se mostrará a otros estudiantes. Sin embargo, el administrador siempre verá tu identidad para verificar la validez de la reseña y realizar moderación.
+                  Tu nombre no se mostrará a otros estudiantes. Sin embargo, el administrador siempre verá tu identidad para verificar la validez y realizar auditoría de la reseña.
                 </small>
               </div>
-
-              <!-- Submit Buttons -->
-              <div class="text-end">
-                <a routerLink="/estudiante/resenas/mis-resenas" class="btn-secondary-glass me-2 text-decoration-none">Cancelar</a>
-                <button
-                  type="submit"
-                  class="btn-primary-glass"
-                  [disabled]="isLoading()"
-                >
-                  @if (isLoading()) {
-                    Enviando...
-                  } @else {
-                    {{ isResubmission() ? 'Reenviar Reseña' : 'Publicar Reseña' }}
-                  }
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
-        </div>
 
-        <div class="col-lg-4 mt-4 mt-lg-0">
-          <div class="glass-card">
-            <h3 class="h5 fw-bold text-white mb-3"><i class="bi bi-info-circle text-gold me-2"></i>Reglas de Publicación</h3>
-            <ul class="text-muted-custom small ps-3 mb-0">
-              <li class="mb-2">Solo puedes publicar <strong>una reseña activa</strong> (pendiente o aprobada) por docente y curso.</li>
-              <li class="mb-2">Si tu reseña es rechazada por incumplir normas, podrás corregirla y reenviarla; la versión previa se mantendrá como historial.</li>
-              <li class="mb-2">Evita lenguaje soez, difamatorio o ataques personales. Las reseñas deben centrarse en la metodología y desempeño docente.</li>
-              <li class="mb-2">El administrador revisará todas las reseñas pendientes antes de que sean visibles en el buscador público.</li>
-            </ul>
+          <!-- Form Buttons -->
+          <div class="text-end d-flex justify-content-end gap-2 mt-4">
+            <a routerLink="/estudiante/resenas/mis-resenas" class="btn-secondary-glass text-decoration-none">
+              Cancelar
+            </a>
+            <button
+              type="submit"
+              class="btn-primary-glass d-flex align-items-center gap-2"
+              [disabled]="isLoading()"
+            >
+              @if (isLoading()) {
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span>Procesando...</span>
+              } @else {
+                <i class="bi bi-send-fill"></i>
+                <span>{{ isResubmission() ? 'Reenviar Reseña' : 'Publicar Reseña' }}</span>
+              }
+            </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-  
+
+    <!-- Side Rules Column (Right) -->
+    <div class="col-lg-4 text-start">
+      <div class="rules-card glass-card mb-4">
+        <h3 class="h5 fw-bold text-dark-title mb-4">
+          <i class="bi bi-info-circle-fill text-gold me-2"></i>Reglas de Publicación
+        </h3>
+        <ul class="rules-list list-unstyled ps-0 mb-0">
+          <li class="d-flex align-items-start mb-3.5">
+            <i class="bi bi-patch-check-fill text-gold mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              Solo puedes publicar <strong>una reseña activa</strong> (pendiente o aprobada) por docente y curso.
+            </span>
+          </li>
+          <li class="d-flex align-items-start mb-3.5">
+            <i class="bi bi-patch-check-fill text-gold mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              Si tu reseña es rechazada por incumplir normas, podrás corregirla y reenviarla; se guardará tu historial previo.
+            </span>
+          </li>
+          <li class="d-flex align-items-start mb-3.5">
+            <i class="bi bi-patch-check-fill text-gold mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              Evita lenguaje soez, difamatorio o ataques personales. Céntrate en la metodología, claridad y desempeño del docente.
+            </span>
+          </li>
+          <li class="d-flex align-items-start">
+            <i class="bi bi-patch-check-fill text-gold mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              El equipo de administración revisará todas las reseñas pendientes antes de habilitar su visualización pública.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="approval-guide-card glass-card">
+        <h3 class="h5 fw-bold text-dark-title mb-4">
+          <i class="bi bi-shield-check text-success me-2"></i>¿Cómo lograr que aprueben tu reseña?
+        </h3>
+        <p class="small text-muted-custom mb-3">
+          Para garantizar que tu comentario pase la moderación rápidamente y sea útil para la comunidad UTP, asegúrate de:
+        </p>
+        <ul class="approval-list list-unstyled ps-0 mb-0">
+          <li class="d-flex align-items-start mb-3.5">
+            <i class="bi bi-check-circle-fill text-success mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              <strong>Ser descriptivo y claro:</strong> Explica cómo evalúa el docente, su metodología en clase (uso de diapositivas, prácticas) y su puntualidad.
+            </span>
+          </li>
+          <li class="d-flex align-items-start mb-3.5">
+            <i class="bi bi-check-circle-fill text-success mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              <strong>Mantener un tono respetuoso:</strong> Centra tus críticas de forma constructiva. Los insultos o ataques personales serán rechazados de inmediato.
+            </span>
+          </li>
+          <li class="d-flex align-items-start mb-3.5">
+            <i class="bi bi-check-circle-fill text-success mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              <strong>Hablar de tu experiencia:</strong> Basa tu reseña únicamente en clases dictadas en ciclos en los que hayas estado matriculado.
+            </span>
+          </li>
+          <li class="d-flex align-items-start">
+            <i class="bi bi-check-circle-fill text-success mt-1 me-2 flex-shrink-0"></i>
+            <span class="small text-muted-custom">
+              <strong>No compartir datos sensibles:</strong> Evita escribir nombres completos de alumnos, números de teléfono, correos o enlaces de redes sociales.
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

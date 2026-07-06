@@ -91,11 +91,11 @@
                           <!-- Activate/Deactivate Button -->
                           @if (asig.estado === 'ACTIVO') {
                             <button class="action-circle-btn deactivate-btn" (click)="toggleEstado(asig)" title="Desactivar Asignación">
-                              <i class="bi bi-toggle-off"></i>
+                              <i class="bi bi-toggle-on"></i>
                             </button>
                           } @else {
                             <button class="action-circle-btn activate-btn" (click)="toggleEstado(asig)" title="Activar Asignación">
-                              <i class="bi bi-toggle-on"></i>
+                              <i class="bi bi-toggle-off"></i>
                             </button>
                           }
                         </td>

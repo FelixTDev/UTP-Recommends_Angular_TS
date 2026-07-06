@@ -115,9 +115,13 @@
                             <button class="action-circle-btn edit-btn" (click)="openEditForm(curso)" title="Editar">
                               <i class="bi bi-pencil-fill"></i>
                             </button>
-                            <!-- Inactivate Button -->
+                            <!-- Toggle Active/Inactive Button -->
                             @if (curso.estado === 'ACTIVO') {
-                              <button class="action-circle-btn deactivate-btn" (click)="inactivarCurso(curso)" title="Inactivar Curso">
+                              <button class="action-circle-btn deactivate-btn" (click)="toggleEstado(curso)" title="Inactivar Curso">
+                                <i class="bi bi-toggle-on"></i>
+                              </button>
+                            } @else {
+                              <button class="action-circle-btn activate-btn" (click)="toggleEstado(curso)" title="Activar Curso">
                                 <i class="bi bi-toggle-off"></i>
                               </button>
                             }

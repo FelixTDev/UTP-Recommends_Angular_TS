@@ -100,9 +100,13 @@
                             <button class="action-circle-btn edit-btn" (click)="openEditForm(doc)" title="Editar">
                               <i class="bi bi-pencil-fill"></i>
                             </button>
-                            <!-- Inactivate Button -->
+                            <!-- Toggle Active/Inactive Button -->
                             @if (doc.estado === 'ACTIVO') {
-                              <button class="action-circle-btn deactivate-btn" (click)="inactivarDocente(doc)" title="Inactivar Docente">
+                              <button class="action-circle-btn deactivate-btn" (click)="toggleEstado(doc)" title="Inactivar Docente">
+                                <i class="bi bi-toggle-on"></i>
+                              </button>
+                            } @else {
+                              <button class="action-circle-btn activate-btn" (click)="toggleEstado(doc)" title="Activar Docente">
                                 <i class="bi bi-toggle-off"></i>
                               </button>
                             }

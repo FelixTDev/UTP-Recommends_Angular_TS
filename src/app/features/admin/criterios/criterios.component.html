@@ -98,11 +98,11 @@
                             <!-- Activate/Deactivate Button -->
                             @if (crit.estado === 'ACTIVO') {
                               <button class="action-circle-btn deactivate-btn" (click)="toggleEstado(crit)" title="Desactivar Criterio">
-                                <i class="bi bi-toggle-off"></i>
+                                <i class="bi bi-toggle-on"></i>
                               </button>
                             } @else {
                               <button class="action-circle-btn activate-btn" (click)="toggleEstado(crit)" title="Activar Criterio">
-                                <i class="bi bi-toggle-on"></i>
+                                <i class="bi bi-toggle-off"></i>
                               </button>
                             }
                           </div>

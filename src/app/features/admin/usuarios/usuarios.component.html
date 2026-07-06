@@ -153,11 +153,11 @@
                             <!-- Toggle Active/Inactive Button -->
                             @if (usr.estado === 'ACTIVO') {
                               <button class="action-circle-btn deactivate-btn" (click)="changeStatus(usr, 'INACTIVO')" title="Inactivar Usuario">
-                                <i class="bi bi-toggle-off"></i>
+                                <i class="bi bi-toggle-on"></i>
                               </button>
                             } @else {
                               <button class="action-circle-btn activate-btn" (click)="changeStatus(usr, 'ACTIVO')" title="Activar Usuario">
-                                <i class="bi bi-toggle-on"></i>
+                                <i class="bi bi-toggle-off"></i>
                               </button>
                             }
                           </div>

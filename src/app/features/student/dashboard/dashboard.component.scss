@@ -1,42 +1,170 @@
+.student-dashboard {
+  color: var(--text-primary);
+}
 
-    .student-dashboard {
-      color: var(--utp-text);
-    }
-    .metric-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 24px;
-    }
-    .icon-wrap {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 12px;
-    }
-    .bg-primary-opacity { background: rgba(255, 23, 68, 0.08); }
-    .bg-success-opacity { background: rgba(5, 150, 105, 0.08); }
-    .bg-warning-opacity { background: rgba(217, 119, 6, 0.08); }
-    .bg-info-opacity { background: rgba(2, 132, 199, 0.08); }
-    .text-primary-color { color: var(--utp-primary); }
-    
-    .metric-val {
-      font-size: 2.25rem;
-      font-weight: 700;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .metric-label {
-      font-size: 0.85rem;
-      color: var(--utp-text-secondary);
-      font-weight: 500;
-    }
-    .font-size-sm {
-      font-size: 0.8rem;
-    }
-  
+.text-dark-title {
+  color: #0f172a !important;
+}
+
+/* Welcome Banner Card */
+.welcome-banner-card {
+  background: linear-gradient(135deg, #a81c34 0%, #700f20 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(112, 15, 32, 0.15);
+  color: #ffffff;
+}
+
+.text-white-85 {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+}
+
+/* Metric Cards */
+.metric-card {
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--utp-border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.25s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.03);
+  background: #ffffff;
+}
+
+.border-left-primary { border-left: 4px solid var(--utp-primary) !important; }
+.border-left-success { border-left: 4px solid var(--utp-success) !important; }
+.border-left-warning { border-left: 4px solid var(--utp-warning) !important; }
+.border-left-info { border-left: 4px solid var(--utp-info) !important; }
+
+.icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.bg-primary-opacity { background: rgba(255, 23, 68, 0.06); }
+.bg-success-opacity { background: rgba(5, 150, 105, 0.06); }
+.bg-warning-opacity { background: rgba(217, 119, 6, 0.06); }
+.bg-info-opacity { background: rgba(2, 132, 199, 0.06); }
+.text-primary-color { color: var(--utp-primary); }
+
+.metric-val {
+  font-size: 2.1rem;
+  font-weight: 750;
+  line-height: 1;
+  margin-bottom: 4px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.metric-label {
+  font-size: 0.82rem;
+  color: var(--utp-text-secondary);
+  font-weight: 600;
+}
+
+/* Quick Action Widgets */
+.quick-action-widget {
+  transition: all 0.2s ease-in-out;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.quick-action-widget:hover {
+  transform: translateX(4px);
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.action-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Badges Status */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 30px;
+}
+
+.badge-status-pendiente {
+  background: rgba(217, 119, 6, 0.06);
+  color: #d97706;
+  border: 1px solid rgba(217, 119, 6, 0.12);
+}
+.badge-status-pendiente .status-indicator { background-color: #d97706; }
+
+.badge-status-aprobada {
+  background: rgba(5, 150, 105, 0.06);
+  color: #059669;
+  border: 1px solid rgba(5, 150, 105, 0.12);
+}
+.badge-status-aprobada .status-indicator { background-color: #059669; }
+
+.badge-status-rechazada {
+  background: rgba(220, 38, 38, 0.06);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.12);
+}
+.badge-status-rechazada .status-indicator { background-color: #dc2626; }
+
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Badges Role */
+.badge-role {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 30px;
+}
+
+.student-role {
+  background: rgba(2, 132, 199, 0.06);
+  color: #0284c7;
+  border: 1px solid rgba(2, 132, 199, 0.12);
+}
+
+.teacher-role {
+  background: rgba(168, 85, 247, 0.06);
+  color: #7c3aed;
+  border: 1px solid rgba(168, 85, 247, 0.12);
+}
+
+/* Icons safeguard spacing */
+.student-dashboard h2 i,
+.student-dashboard a i,
+.student-dashboard .badge-role i {
+  margin-right: 6px !important;
+  display: inline-block;
+}
+
+.font-size-sm {
+  font-size: 0.8rem;
+}

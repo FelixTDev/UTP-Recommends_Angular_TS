@@ -1,145 +1,162 @@
+<div class="student-profile">
+  <!-- Header Section -->
+  <div class="row mb-5">
+    <div class="col text-start">
+      <h1 class="h2 fw-bold text-gradient mb-2">Mi Perfil</h1>
+      <p class="text-muted-custom mb-0">Administra tus datos personales y configuración de seguridad de tu cuenta.</p>
+    </div>
+  </div>
 
-    <div class="student-profile">
-      <div class="row mb-4">
-        <div class="col">
-          <h1 class="h2 fw-bold text-white">Mi Perfil</h1>
-          <p class="text-muted-custom">Administra tus datos personales y configuración de seguridad.</p>
-        </div>
-      </div>
+  <div class="row g-4">
+    <!-- Info & Edit Profile Form -->
+    <div class="col-lg-7">
+      <div class="glass-card h-100">
+        <h2 class="h5 fw-bold text-dark-title mb-4"><i class="bi bi-person-gear me-2 text-primary"></i>Datos Personales</h2>
 
-      <div class="row g-4">
-        <!-- Info & Edit Profile Form -->
-        <div class="col-lg-7">
-          <div class="glass-card mb-4">
-            <h2 class="h5 fw-bold text-white mb-4"><i class="bi bi-person-gear me-2 text-gold"></i>Datos Personales</h2>
-
-            <!-- Read Only Specs -->
-            <div class="row g-3 mb-4 text-start bg-dark-opacity p-3 rounded">
-              <div class="col-md-4">
-                <span class="d-block small text-muted-custom">Código Estudiante</span>
-                <strong class="text-white">{{ profile()?.codigoEstudiante }}</strong>
+        <!-- Read Only Specs -->
+        <div class="row g-3 mb-4 text-start">
+          <div class="col-md-4">
+            <div class="spec-card">
+              <i class="bi bi-person-badge"></i>
+              <div>
+                <span class="d-block small text-muted-custom">Código</span>
+                <strong class="text-dark-title font-size-md">{{ profile()?.codigoEstudiante }}</strong>
               </div>
-              <div class="col-md-8">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="spec-card">
+              <i class="bi bi-mortarboard"></i>
+              <div>
                 <span class="d-block small text-muted-custom">Carrera Profesional</span>
-                <strong class="text-white">{{ profile()?.carreraNombre }}</strong>
+                <strong class="text-dark-title font-size-md">{{ profile()?.carreraNombre }}</strong>
               </div>
-              <div class="col-md-12">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="spec-card">
+              <i class="bi bi-envelope"></i>
+              <div>
                 <span class="d-block small text-muted-custom">Correo Institucional</span>
-                <strong class="text-white">{{ profile()?.email }}</strong>
+                <strong class="text-dark-title font-size-md">{{ profile()?.email }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="glass-form-group">
+                <label class="glass-form-label">Nombres</label>
+                <input 
+                  type="text" 
+                  class="glass-input" 
+                  formControlName="nombres"
+                  [class.is-invalid]="profileSubmitted() && pf['nombres'].errors"
+                />
+                @if (profileSubmitted() && pf['nombres'].errors) {
+                  <div class="invalid-feedback">
+                    Nombres son obligatorios (solo letras).
+                  </div>
+                }
               </div>
             </div>
 
-            <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="glass-form-group">
-                    <label class="glass-form-label">Nombres</label>
-                    <input 
-                      type="text" 
-                      class="glass-input" 
-                      formControlName="nombres"
-                      [class.is-invalid]="profileSubmitted() && pf['nombres'].errors"
-                    />
-                    @if (profileSubmitted() && pf['nombres'].errors) {
-                      <div class="invalid-feedback">
-                        Nombres son obligatorios (solo letras).
-                      </div>
-                    }
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-                  <div class="glass-form-group">
-                    <label class="glass-form-label">Apellidos</label>
-                    <input 
-                      type="text" 
-                      class="glass-input" 
-                      formControlName="apellidos"
-                      [class.is-invalid]="profileSubmitted() && pf['apellidos'].errors"
-                    />
-                    @if (profileSubmitted() && pf['apellidos'].errors) {
-                      <div class="invalid-feedback">
-                        Apellidos son obligatorios (solo letras).
-                      </div>
-                    }
-                  </div>
-                </div>
-              </div>
-
-              <div class="text-end mt-3">
-                <button 
-                  type="submit" 
-                  class="btn-primary-glass"
-                  [disabled]="isUpdatingProfile()"
-                >
-                  @if (isUpdatingProfile()) {
-                    Guardando...
-                  } @else {
-                    <i class="bi bi-save me-2"></i>Guardar Cambios
-                  }
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Security / Password Form -->
-        <div class="col-lg-5">
-          <div class="glass-card">
-            <h2 class="h5 fw-bold text-white mb-4"><i class="bi bi-shield-lock me-2 text-gold"></i>Seguridad</h2>
-
-            <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
-              <!-- Current Password -->
+            <div class="col-md-6">
               <div class="glass-form-group">
-                <label class="glass-form-label">Contraseña Actual</label>
+                <label class="glass-form-label">Apellidos</label>
                 <input 
-                  type="password" 
+                  type="text" 
                   class="glass-input" 
-                  placeholder="••••••••"
-                  formControlName="currentPassword"
-                  [class.is-invalid]="passwordSubmitted() && pw['currentPassword'].errors"
+                  formControlName="apellidos"
+                  [class.is-invalid]="profileSubmitted() && pf['apellidos'].errors"
                 />
-                @if (passwordSubmitted() && pw['currentPassword'].errors) {
+                @if (profileSubmitted() && pf['apellidos'].errors) {
                   <div class="invalid-feedback">
-                    Contraseña actual es requerida.
+                    Apellidos son obligatorios (solo letras).
                   </div>
                 }
               </div>
-
-              <!-- New Password -->
-              <div class="glass-form-group">
-                <label class="glass-form-label">Nueva Contraseña</label>
-                <input 
-                  type="password" 
-                  class="glass-input" 
-                  placeholder="Mínimo 8 caracteres"
-                  formControlName="newPassword"
-                  [class.is-invalid]="passwordSubmitted() && pw['newPassword'].errors"
-                />
-                @if (passwordSubmitted() && pw['newPassword'].errors) {
-                  <div class="invalid-feedback">
-                    @if (pw['newPassword'].errors['required']) { Nueva contraseña es requerida. }
-                    @if (pw['newPassword'].errors['pattern']) { Debe incluir minúscula, mayúscula, número y un símbolo (!&#64;#$%&*?_-). }
-                  </div>
-                }
-              </div>
-
-              <div class="text-end mt-4">
-                <button 
-                  type="submit" 
-                  class="btn-primary-glass w-100"
-                  [disabled]="isChangingPassword()"
-                >
-                  @if (isChangingPassword()) {
-                    Cambiando...
-                  } @else {
-                    Cambiar Contraseña
-                  }
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
+
+          <div class="text-end mt-4">
+            <button 
+              type="submit" 
+              class="btn-primary-glass"
+              [disabled]="isUpdatingProfile()"
+            >
+              @if (isUpdatingProfile()) {
+                Guardando...
+              } @else {
+                <i class="bi bi-save me-2"></i>Guardar Cambios
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Security / Password Form -->
+    <div class="col-lg-5">
+      <div class="glass-card h-100 d-flex flex-column justify-content-between">
+        <div>
+          <h2 class="h5 fw-bold text-dark-title mb-4"><i class="bi bi-shield-lock me-2 text-primary"></i>Seguridad</h2>
+
+          <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+            <!-- Current Password -->
+            <div class="glass-form-group">
+              <label class="glass-form-label"><i class="bi bi-key text-muted-custom"></i>Contraseña Actual</label>
+              <input 
+                type="password" 
+                class="glass-input" 
+                placeholder="••••••••"
+                formControlName="currentPassword"
+                [class.is-invalid]="passwordSubmitted() && pw['currentPassword'].errors"
+              />
+              @if (passwordSubmitted() && pw['currentPassword'].errors) {
+                <div class="invalid-feedback">
+                  Contraseña actual es requerida.
+                </div>
+              }
+            </div>
+
+            <!-- New Password -->
+            <div class="glass-form-group mt-3">
+              <label class="glass-form-label"><i class="bi bi-shield-lock text-muted-custom"></i>Nueva Contraseña</label>
+              <input 
+                type="password" 
+                class="glass-input" 
+                placeholder="Mínimo 8 caracteres"
+                formControlName="newPassword"
+                [class.is-invalid]="passwordSubmitted() && pw['newPassword'].errors"
+              />
+              @if (passwordSubmitted() && pw['newPassword'].errors) {
+                <div class="invalid-feedback">
+                  @if (pw['newPassword'].errors['required']) { Nueva contraseña es requerida. }
+                  @if (pw['newPassword'].errors['pattern']) { Debe incluir minúscula, mayúscula, número y un símbolo (!@#$%&*?_-). }
+                </div>
+              }
+            </div>
+
+            <div class="text-end mt-5">
+              <button 
+                type="submit" 
+                class="btn-primary-glass w-100 d-inline-flex align-items-center justify-content-center gap-2 py-2.5"
+                [disabled]="isChangingPassword()"
+              >
+                @if (isChangingPassword()) {
+                  Cambiando...
+                } @else {
+                  <i class="bi bi-shield-check"></i>
+                  <span>Actualizar Contraseña</span>
+                }
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  
+  </div>
+</div>

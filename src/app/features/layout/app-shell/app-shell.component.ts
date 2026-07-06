@@ -51,6 +51,9 @@ export class AppShellComponent {
   // Dynamic Page Title
   pageTitle(): string {
     const currentUrl = window.location.pathname;
+    if (currentUrl === '/estudiante/perfil') {
+      return 'Ajustes de Usuario';
+    }
     const currentLink = this.navLinks.find(l => currentUrl.startsWith(l.path));
     return currentLink ? currentLink.label : 'UTP+Recommends';
   }

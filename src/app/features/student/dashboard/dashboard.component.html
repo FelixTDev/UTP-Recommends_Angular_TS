@@ -1,144 +1,230 @@
+<div class="student-dashboard">
+  @if (isLoading()) {
+    <app-loading-skeleton type="list" [count]="2"></app-loading-skeleton>
+  } @else if (data()) {
+    <!-- Welcome Banner Card -->
+    <div class="welcome-banner-card mb-4 p-4 text-start">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="h3 fw-bold text-white mb-2">
+            Hola, {{ studentName() || 'Estudiante' }}
+          </h1>
+          <p class="text-white-85 mb-0">
+            Tu participacion es clave. Escribe resenas de tus cursos y docentes para ayudar a otros estudiantes de la UTP.
+          </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <a routerLink="/estudiante/resenas/nueva" class="btn btn-primary-glass rounded-pill px-4 py-2 shadow-sm d-inline-flex align-items-center gap-2">
+            <i class="bi bi-pencil-square me-2"></i>Nueva Resena
+          </a>
+        </div>
+      </div>
+    </div>
 
-    <div class="student-dashboard">
-      <div class="row mb-4">
-        <div class="col">
-          <h1 class="h2 fw-bold text-white">Mi Panel de Estudiante</h1>
-          <p class="text-muted-custom">Resumen de tu actividad y contribución al sistema.</p>
+    <!-- Metric Cards -->
+    <div class="row g-4 mb-4">
+      <!-- Total Reviews Card -->
+      <div class="col-md-3">
+        <div class="metric-card glass-card border-left-primary">
+          <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="text-start">
+              <div class="metric-val text-dark-title">{{ data()?.totalResenas }}</div>
+              <div class="metric-label">Resenas Realizadas</div>
+            </div>
+            <div class="icon-wrap bg-primary-opacity"><i class="bi bi-chat-quote-fill text-primary-color"></i></div>
+          </div>
         </div>
       </div>
 
-      @if (isLoading()) {
-        <app-loading-skeleton type="table" [count]="2"></app-loading-skeleton>
-      } @else if (data()) {
-        <!-- Metric Cards -->
-        <div class="row g-4 mb-5">
-          <!-- Total Reviews Card -->
-          <div class="col-md-3">
-            <div class="metric-card glass-card">
-              <div class="icon-wrap bg-primary-opacity"><i class="bi bi-chat-quote-fill text-primary-color"></i></div>
-              <div class="metric-val">{{ data()?.totalResenas }}</div>
-              <div class="metric-label">Reseñas Realizadas</div>
-            </div>
-          </div>
-
-          <!-- Approved Reviews Card -->
-          <div class="col-md-3">
-            <div class="metric-card glass-card">
-              <div class="icon-wrap bg-success-opacity"><i class="bi bi-check-circle-fill text-success"></i></div>
+      <!-- Approved Reviews Card -->
+      <div class="col-md-3">
+        <div class="metric-card glass-card border-left-success">
+          <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="text-start">
               <div class="metric-val text-success">{{ data()?.resenasAprobadas }}</div>
-              <div class="metric-label">Reseñas Aprobadas</div>
+              <div class="metric-label">Resenas Aprobadas</div>
             </div>
+            <div class="icon-wrap bg-success-opacity"><i class="bi bi-check-circle-fill text-success"></i></div>
           </div>
+        </div>
+      </div>
 
-          <!-- Pending Reviews Card -->
-          <div class="col-md-3">
-            <div class="metric-card glass-card">
-              <div class="icon-wrap bg-warning-opacity"><i class="bi bi-clock-history text-warning"></i></div>
+      <!-- Pending Reviews Card -->
+      <div class="col-md-3">
+        <div class="metric-card glass-card border-left-warning">
+          <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="text-start">
               <div class="metric-val text-warning">{{ data()?.resenasPendientes }}</div>
-              <div class="metric-label">Reseñas Pendientes</div>
+              <div class="metric-label">Resenas Pendientes</div>
             </div>
+            <div class="icon-wrap bg-warning-opacity"><i class="bi bi-clock-history text-warning"></i></div>
           </div>
+        </div>
+      </div>
 
-          <!-- Requests Card -->
-          <div class="col-md-3">
-            <div class="metric-card glass-card">
-              <div class="icon-wrap bg-info-opacity"><i class="bi bi-envelope-fill text-info"></i></div>
+      <!-- Requests Card -->
+      <div class="col-md-3">
+        <div class="metric-card glass-card border-left-info">
+          <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="text-start">
               <div class="metric-val text-info">{{ data()?.totalSolicitudes }}</div>
               <div class="metric-label">Solicitudes Enviadas</div>
             </div>
+            <div class="icon-wrap bg-info-opacity"><i class="bi bi-envelope-fill text-info"></i></div>
           </div>
         </div>
-
-        <div class="row g-4">
-          <!-- Recent Reviews List -->
-          <div class="col-lg-6">
-            <div class="glass-card h-100">
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="h5 fw-bold text-white mb-0">Últimas Reseñas</h2>
-                <a routerLink="/estudiante/resenas/mis-resenas" class="text-gold small text-decoration-none">Ver todas</a>
-              </div>
-
-              @if (data()?.ultimasResenas?.length === 0) {
-                <div class="text-center py-4">
-                  <i class="bi bi-chat-left-dots text-muted fs-2 d-block mb-2"></i>
-                  <span class="text-muted-custom">No tienes reseñas creadas.</span>
-                  <a routerLink="/estudiante/resenas/nueva" class="text-gold d-block mt-2 text-decoration-none">Escribe tu primera reseña</a>
-                </div>
-              } @else {
-                <div class="glass-table-container">
-                  <table class="glass-table m-0 align-middle">
-                    <thead>
-                      <tr class="text-muted-custom font-size-sm">
-                        <th>Curso</th>
-                        <th>Docente</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @for (rev of data()?.ultimasResenas; track rev.id) {
-                        <tr>
-                          <td class="text-white">{{ rev.curso }}</td>
-                          <td>{{ rev.docente }}</td>
-                          <td>
-                            @let status = (rev.estado | statusBadge);
-                            <span class="badge-badge" [class]="status.class">{{ status.label }}</span>
-                          </td>
-                          <td class="text-muted-custom text-nowrap">{{ rev.fechaCreacion | date:'dd/MM/yyyy' }}</td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              }
-            </div>
-          </div>
-
-          <!-- Recent Requests List -->
-          <div class="col-lg-6">
-            <div class="glass-card h-100">
-              <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="h5 fw-bold text-white mb-0">Últimas Solicitudes</h2>
-                <a routerLink="/estudiante/solicitudes/mis-solicitudes" class="text-gold small text-decoration-none">Ver todas</a>
-              </div>
-
-              @if (data()?.ultimasSolicitudes?.length === 0) {
-                <div class="text-center py-4">
-                  <i class="bi bi-envelope-open text-muted fs-2 d-block mb-2"></i>
-                  <span class="text-muted-custom">No tienes solicitudes pendientes.</span>
-                  <a routerLink="/estudiante/solicitudes/nueva" class="text-gold d-block mt-2 text-decoration-none">Enviar una solicitud</a>
-                </div>
-              } @else {
-                <div class="glass-table-container">
-                  <table class="glass-table m-0 align-middle">
-                    <thead>
-                      <tr class="text-muted-custom font-size-sm">
-                        <th>Tipo</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @for (req of data()?.ultimasSolicitudes; track req.id) {
-                        <tr>
-                          <td class="text-white">
-                            @let typeInfo = (req.tipo | statusBadge);
-                            <span class="badge-badge" [class]="typeInfo.class">{{ typeInfo.label }}</span>
-                          </td>
-                          <td>
-                            @let status = (req.estado | statusBadge);
-                            <span class="badge-badge" [class]="status.class">{{ status.label }}</span>
-                          </td>
-                          <td class="text-muted-custom text-nowrap">{{ req.fechaCreacion | date:'dd/MM/yyyy' }}</td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-      }
+      </div>
     </div>
-  
+
+    <!-- Main Content Split Grid -->
+    <div class="row g-4">
+      <!-- Left Column: Activity lists -->
+      <div class="col-lg-8 text-start">
+        <!-- Recent Reviews List -->
+        <div class="glass-card mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h5 fw-bold text-dark-title mb-0">
+              <i class="bi bi-chat-left-text-fill text-primary me-2"></i>Ultimas Resenas Realizadas
+            </h2>
+            <a routerLink="/estudiante/resenas/mis-resenas" class="text-gold small text-decoration-none fw-bold">Ver todas</a>
+          </div>
+
+          @if (data()?.ultimasResenas?.length === 0) {
+            <div class="text-center py-5">
+              <i class="bi bi-chat-left-dots text-muted fs-1 d-block mb-3"></i>
+              <p class="text-muted-custom mb-3">Aun no has escrito ninguna resena sobre tus docentes o cursos.</p>
+              <a routerLink="/estudiante/resenas/nueva" class="btn btn-outline-danger py-2 px-4 rounded-pill shadow-sm">Escribir mi primera resena</a>
+            </div>
+          } @else {
+            <div class="glass-table-container">
+              <table class="glass-table m-0 align-middle">
+                <thead>
+                  <tr class="text-muted-custom font-size-sm">
+                    <th>Curso</th>
+                    <th>Docente</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (rev of data()?.ultimasResenas; track rev.id) {
+                    <tr>
+                      <td class="text-dark-title fw-bold">{{ rev.curso }}</td>
+                      <td class="text-muted-custom">{{ rev.docente }}</td>
+                      <td>
+                        @let status = (rev.estado | statusBadge);
+                        <span class="badge-status" [ngClass]="'badge-status-' + rev.estado.toLowerCase()">
+                          <span class="status-indicator"></span>
+                          {{ status.label }}
+                        </span>
+                      </td>
+                      <td class="text-muted-custom text-nowrap">{{ rev.fechaCreacion | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+
+        <!-- Recent Requests List -->
+        <div class="glass-card">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h5 fw-bold text-dark-title mb-0">
+              <i class="bi bi-envelope-fill text-info me-2"></i>Sugerencias y Solicitudes Recientes
+            </h2>
+            <a routerLink="/estudiante/solicitudes/mis-solicitudes" class="text-gold small text-decoration-none fw-bold">Ver todas</a>
+          </div>
+
+          @if (data()?.ultimasSolicitudes?.length === 0) {
+            <div class="text-center py-5">
+              <i class="bi bi-envelope-open text-muted fs-1 d-block mb-3"></i>
+              <p class="text-muted-custom mb-3">No has registrado sugerencia de nuevos docentes o cursos.</p>
+              <a routerLink="/estudiante/solicitudes/nueva" class="btn btn-outline-info py-2 px-4 rounded-pill shadow-sm">Sugerir Curso o Docente</a>
+            </div>
+          } @else {
+            <div class="glass-table-container">
+              <table class="glass-table m-0 align-middle">
+                <thead>
+                  <tr class="text-muted-custom font-size-sm">
+                    <th>Tipo de Solicitud</th>
+                    <th>Estado</th>
+                    <th>Fecha de Envio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (req of data()?.ultimasSolicitudes; track req.id) {
+                    <tr>
+                      <td class="text-dark-title fw-bold">
+                        @let typeInfo = (req.tipo | statusBadge);
+                        <span class="badge-role student-role" [class.student-role]="req.tipo === 'CURSO_NUEVO'" [class.teacher-role]="req.tipo === 'DOCENTE_NUEVO'">
+                          <i class="bi me-2" [class.bi-book]="req.tipo === 'CURSO_NUEVO'" [class.bi-person-workspace]="req.tipo === 'DOCENTE_NUEVO'" [class.bi-mortarboard]="req.tipo === 'AMBOS'"></i>
+                          {{ typeInfo.label }}
+                        </span>
+                      </td>
+                      <td>
+                        @let status = (req.estado | statusBadge);
+                        <span class="badge-status" [ngClass]="'badge-status-' + req.estado.toLowerCase()">
+                          <span class="status-indicator"></span>
+                          {{ status.label }}
+                        </span>
+                      </td>
+                      <td class="text-muted-custom text-nowrap">{{ req.fechaCreacion | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Column: Quick Action widgets -->
+      <div class="col-lg-4 text-start">
+        <div class="glass-card mb-4">
+          <h2 class="h5 fw-bold text-dark-title mb-4">
+            <i class="bi bi-lightning-charge-fill text-gold me-2"></i>Accesos Rapidos
+          </h2>
+          
+          <div class="d-flex flex-column gap-3">
+            <!-- Action 1: Escribir Reseña -->
+            <a routerLink="/estudiante/resenas/nueva" class="quick-action-widget bg-light p-3 rounded border border-light-subtle d-flex align-items-center gap-3 text-decoration-none">
+              <div class="action-icon bg-primary-opacity"><i class="bi bi-star-fill text-primary-color"></i></div>
+              <div class="flex-grow-1">
+                <h3 class="h6 fw-bold text-dark-title mb-1">Escribir Resena</h3>
+                <p class="small text-muted-custom mb-0">Califica a tus cursos y docentes de este ciclo academico.</p>
+              </div>
+            </a>
+
+            <!-- Action 2: Sugerir Curso/Docente -->
+            <a routerLink="/estudiante/solicitudes/nueva" class="quick-action-widget bg-light p-3 rounded border border-light-subtle d-flex align-items-center gap-3 text-decoration-none">
+              <div class="action-icon bg-info-opacity"><i class="bi bi-plus-circle-fill text-info"></i></div>
+              <div class="flex-grow-1">
+                <h3 class="h6 fw-bold text-dark-title mb-1">Sugerir Elemento</h3>
+                <p class="small text-muted-custom mb-0">¿No encuentras un docente o asignatura? Sugierelo aqui.</p>
+              </div>
+            </a>
+
+            <!-- Action 3: Mis aportaciones -->
+            <a routerLink="/estudiante/resenas/mis-resenas" class="quick-action-widget bg-light p-3 rounded border border-light-subtle d-flex align-items-center gap-3 text-decoration-none">
+              <div class="action-icon bg-warning-opacity"><i class="bi bi-folder-fill text-warning"></i></div>
+              <div class="flex-grow-1">
+                <h3 class="h6 fw-bold text-dark-title mb-1">Mis Aportes</h3>
+                <p class="small text-muted-custom mb-0">Revisa el estado de aprobacion de tus opiniones enviadas.</p>
+              </div>
+            </a>
+            
+            <!-- Action 4: Mi Perfil -->
+            <a routerLink="/estudiante/perfil" class="quick-action-widget bg-light p-3 rounded border border-light-subtle d-flex align-items-center gap-3 text-decoration-none">
+              <div class="action-icon bg-success-opacity"><i class="bi bi-person-fill-gear text-success"></i></div>
+              <div class="flex-grow-1">
+                <h3 class="h6 fw-bold text-dark-title mb-1">Ajustes de Perfil</h3>
+                <p class="small text-muted-custom mb-0">Actualiza tus datos institucionales y contrasena.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  @}
+</div>

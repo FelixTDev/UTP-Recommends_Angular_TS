@@ -55,6 +55,15 @@ export class MisResenasComponent implements OnInit {
     return sum / resena.calificaciones.length;
   }
 
+  getInitials(name: string): string {
+    if (!name) return '';
+    return name.trim().split(/\s+/)
+      .map(n => n.charAt(0))
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+  }
+
   onResubmit(id: number): void {
     this.router.navigate(['/estudiante/resenas/nueva'], { queryParams: { rejectedId: id } });
   }

@@ -1,113 +1,167 @@
+<div class="mis-resenas">
+  <!-- Header Section -->
+  <div class="row mb-5 align-items-center">
+    <div class="col-md-8 text-start">
+      <h1 class="h2 fw-bold text-gradient mb-2">Mis Reseñas</h1>
+      <p class="text-muted-custom mb-0">Historial de calificaciones y comentarios que has publicado en la plataforma.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+      <a routerLink="/estudiante/resenas/nueva" class="btn-primary-glass text-decoration-none d-inline-flex align-items-center gap-2">
+        <i class="bi bi-pencil-square"></i>
+        <span>Escribir Reseña</span>
+      </a>
+    </div>
+  </div>
 
-    <div class="mis-resenas">
-      <div class="row mb-4 align-items-center">
-        <div class="col-md-8">
-          <h1 class="h2 fw-bold text-white">Mis Reseñas</h1>
-          <p class="text-muted-custom">Historial de calificaciones y comentarios que has publicado.</p>
-        </div>
-        <div class="col-md-4 text-md-end">
-          <a routerLink="/estudiante/resenas/nueva" class="btn-primary-glass text-decoration-none">
-            <i class="bi bi-pencil-square me-2"></i>Escribir Reseña
-          </a>
-        </div>
-      </div>
+  <!-- Main Content Area -->
+  @if (isLoading()) {
+    <app-loading-skeleton type="list" [count]="3"></app-loading-skeleton>
+  } @else if (resenas().length === 0) {
+    <app-empty-state 
+      icon="bi-chat-left-text"
+      title="Sin Reseñas" 
+      description="Aún no has escrito ninguna reseña de docentes en el sistema."
+      actionText="Escribir mi primera reseña"
+      (action)="onWriteFirstReview()"
+    ></app-empty-state>
+  } @else {
+    <div class="row g-4">
+      @for (resena of resenas(); track resena.id) {
+        <div class="col-12 col-lg-6">
+          <div class="review-row-card glass-card d-flex flex-column justify-content-between h-100">
+            <div>
+              <div class="d-flex align-items-start gap-3 flex-column flex-sm-row">
+                <!-- Teacher Initials Avatar -->
+                <div class="teacher-avatar flex-shrink-0" aria-hidden="true">
+                  {{ getInitials(resena.docente) }}
+                </div>
+                
+                <!-- Main Review Details -->
+                <div class="flex-grow-1 w-100">
+                  <!-- Title and Status Line -->
+                  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <h3 class="h5 fw-bold text-dark-title mb-0">{{ resena.docente }}</h3>
+                    <span class="badge-course">
+                      <i class="bi bi-journal-bookmark me-1"></i>{{ resena.curso }}
+                    </span>
+                    
+                    @let status = (resena.estado | statusBadge);
+                    <span class="badge-status-pill" [class]="'status-' + resena.estado.toLowerCase()">
+                      <span class="status-dot"></span>
+                      {{ status.label }}
+                    </span>
+                    
+                    <span class="version-tag" title="Versión de la reseña">
+                      <i class="bi bi-arrow-repeat me-1"></i>v{{ resena.version }}
+                    </span>
+                  </div>
 
-      @if (isLoading()) {
-        <app-loading-skeleton type="list" [count]="3"></app-loading-skeleton>
-      } @else if (resenas().length === 0) {
-        <app-empty-state 
-          icon="bi-chat-left-text"
-          title="Sin Reseñas" 
-          description="Aún no has escrito ninguna reseña de docentes en el sistema."
-          actionText="Escribir mi primera reseña"
-          (action)="onWriteFirstReview()"
-        ></app-empty-state>
-      } @else {
-        <div class="row g-4">
-          @for (resena of resenas(); track resena.id) {
-            <div class="col-12">
-              <div class="review-row-card glass-card">
-                <div class="row g-3">
-                  <!-- Header details -->
-                  <div class="col-md-9">
-                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                      <h3 class="h5 fw-bold text-white mb-0">{{ resena.docente }}</h3>
-                      <span class="badge-badge badge-primary">{{ resena.curso }}</span>
-                      @let status = (resena.estado | statusBadge);
-                      <span class="badge-badge" [class]="status.class">{{ status.label }}</span>
-                      <span class="text-muted-custom small ms-md-2">Versión {{ resena.version }}</span>
-                    </div>
-                    <div class="d-flex align-items-center mb-3">
-                      <app-star-rating [value]="calculateAverage(resena)" [readOnly]="true" [showValue]="true"></app-star-rating>
-                      <span class="text-muted-custom small ms-3">
-                        <i class="bi bi-clock me-1"></i>{{ resena.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
-                      </span>
-                    </div>
+                  <!-- Rating Line -->
+                  <div class="mb-3">
+                    <app-star-rating [value]="calculateAverage(resena)" [readOnly]="true" [showValue]="true"></app-star-rating>
+                  </div>
 
-                    <p class="comment-text text-muted-custom mb-3">
-                      "{{ resena.comentario }}"
+                  <!-- Quoted comment text -->
+                  <div class="comment-quote-box mb-3">
+                    <i class="bi bi-quote quote-icon"></i>
+                    <p class="comment-text mb-0">
+                      {{ resena.comentario }}
                     </p>
+                  </div>
 
-                    <!-- Criteria Ratings -->
-                    <div class="ratings-mini-grid d-flex flex-wrap gap-3 p-2.5 rounded bg-dark-opacity mb-3">
-                      @for (cal of resena.calificaciones; track cal.criterioId) {
-                        <div class="rating-mini-item">
-                          <span class="criteria-label d-block text-muted-custom">{{ cal.criterio }}</span>
-                          <strong class="text-white">{{ cal.puntaje }} <i class="bi bi-star-fill text-gold small"></i></strong>
+                  <!-- Criteria Ratings Pill Grid -->
+                  <div class="ratings-grid-premium">
+                    @for (cal of resena.calificaciones; track cal.criterioId) {
+                      <div class="rating-badge-card">
+                        <span class="criteria-label">{{ cal.criterio }}</span>
+                        <div class="rating-val-wrap">
+                          <span class="rating-val">{{ cal.puntaje }}</span>
+                          <i class="bi bi-star-fill text-gold ms-1"></i>
                         </div>
-                      }
-                    </div>
-
-                    <!-- Observation for rejected review -->
-                    @if (resena.estado === 'RECHAZADA' && resena.motivoRechazo) {
-                      <div class="alert alert-danger border-0 bg-danger-opacity text-red p-2.5 rounded mb-0 mt-3 small">
-                        <strong>Motivo de rechazo:</strong> {{ resena.motivoRechazo }}
                       </div>
                     }
                   </div>
 
-                  <!-- Actions column -->
-                  <div class="col-md-3 d-flex flex-column justify-content-center align-items-md-end">
-                    @if (resena.estado === 'RECHAZADA') {
-                      <button 
-                        class="btn-primary-glass py-2 px-3 text-nowrap w-100" 
-                        (click)="onResubmit(resena.id)"
-                      >
-                        <i class="bi bi-pencil-square me-2"></i>Corregir y Reenviar
-                      </button>
-                    }
-                    <div class="text-muted-custom small mt-2">
-                      {{ resena.esAnonimo ? 'Publicado Anónimamente' : 'Publicado Visiblemente' }}
+                  <!-- Rejection Callout Box -->
+                  @if (resena.estado === 'RECHAZADA' && resena.motivoRechazo) {
+                    <div class="rejection-callout mt-3">
+                      <div class="callout-header">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Motivo de rechazo de la reseña</strong>
+                      </div>
+                      <div class="callout-body">
+                        {{ resena.motivoRechazo }}
+                      </div>
                     </div>
-                  </div>
+                  }
                 </div>
               </div>
             </div>
-          }
-        </div>
 
-        <!-- Pagination -->
-        @if (totalPages() > 1) {
-          <div class="pagination-container d-flex justify-content-center mt-5">
-            <button 
-              class="btn-secondary-glass py-2 px-3 me-2" 
-              [disabled]="currentPage() === 0"
-              (click)="changePage(currentPage() - 1)"
-            >
-              <i class="bi bi-chevron-left"></i>
-            </button>
-            <span class="align-self-center mx-3 text-muted-custom">
-              Pág. <strong>{{ currentPage() + 1 }}</strong> de {{ totalPages() }}
-            </span>
-            <button 
-              class="btn-secondary-glass py-2 px-3" 
-              [disabled]="currentPage() >= totalPages() - 1"
-              (click)="changePage(currentPage() + 1)"
-            >
-              <i class="bi bi-chevron-right"></i>
-            </button>
+            <!-- Card Footer: Time Stamp, Privacy & Actions -->
+            <div class="review-card-footer d-flex flex-wrap align-items-center justify-content-between gap-3 mt-4 pt-3 border-top border-light-subtle">
+              <span class="date-display text-muted-custom font-size-sm">
+                <i class="bi bi-clock me-1"></i>{{ resena.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+              
+              <div class="d-flex align-items-center gap-2">
+                <div class="privacy-status-badge">
+                  @if (resena.esAnonimo) {
+                    <span class="badge-privacy badge-privacy-anon" title="Esta reseña se publicó de forma anónima">
+                      <i class="bi bi-shield-lock-fill"></i>
+                      Anónimo
+                    </span>
+                  } @else {
+                    <span class="badge-privacy badge-privacy-public" title="Esta reseña se publicó de forma visible">
+                      <i class="bi bi-eye-fill"></i>
+                      Público
+                    </span>
+                  }
+                </div>
+                
+                @if (resena.estado === 'RECHAZADA') {
+                  <button 
+                    class="btn-primary-glass py-1.5 px-3 text-nowrap d-inline-flex align-items-center gap-2 font-size-sm" 
+                    (click)="onResubmit(resena.id)"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                    <span>Corregir y Reenviar</span>
+                  </button>
+                }
+              </div>
+            </div>
           </div>
-        }
+        </div>
       }
     </div>
-  
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination-container d-flex justify-content-center align-items-center mt-5">
+        <div class="pagination-capsule d-flex align-items-center">
+          <button 
+            class="btn-pagination-nav me-2" 
+            [disabled]="currentPage() === 0"
+            (click)="changePage(currentPage() - 1)"
+            aria-label="Página anterior"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          
+          <span class="pagination-info text-muted-custom mx-3">
+            Pág. <strong>{{ currentPage() + 1 }}</strong> de {{ totalPages() }}
+          </span>
+          
+          <button 
+            class="btn-pagination-nav ms-2" 
+            [disabled]="currentPage() >= totalPages() - 1"
+            (click)="changePage(currentPage() + 1)"
+            aria-label="Página siguiente"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

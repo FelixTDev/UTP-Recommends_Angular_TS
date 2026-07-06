@@ -93,9 +93,13 @@
                             <button class="action-circle-btn edit-btn" (click)="openEditForm(carrera)" title="Editar">
                               <i class="bi bi-pencil-fill"></i>
                             </button>
-                            <!-- Inactivate Button -->
+                            <!-- Toggle Active/Inactive Button -->
                             @if (carrera.estado === 'ACTIVA') {
-                              <button class="action-circle-btn deactivate-btn" (click)="inactivarCarrera(carrera)" title="Inactivar Carrera">
+                              <button class="action-circle-btn deactivate-btn" (click)="toggleEstado(carrera)" title="Inactivar Carrera">
+                                <i class="bi bi-toggle-on"></i>
+                              </button>
+                            } @else {
+                              <button class="action-circle-btn activate-btn" (click)="toggleEstado(carrera)" title="Activar Carrera">
                                 <i class="bi bi-toggle-off"></i>
                               </button>
                             }

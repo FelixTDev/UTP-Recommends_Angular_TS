@@ -1,51 +1,258 @@
+.nueva-resena {
+  color: var(--utp-text);
+  padding: 10px 0;
+}
 
-    .nueva-resena {
-      color: var(--utp-text);
-    }
-    .autocomplete-dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      max-height: 250px;
-      overflow-y: auto;
-      background: var(--utp-surface);
-      border: 1px solid var(--utp-border);
-      border-radius: 8px;
-      box-shadow: var(--card-shadow);
-    }
-    .dropdown-item-custom {
-      padding: 12px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid var(--utp-border-soft);
-      transition: background-color 0.2s ease;
-    }
-    .dropdown-item-custom:hover {
-      background: var(--utp-surface-soft);
-    }
-    .selected-option-tag {
-      background: rgba(255, 23, 68, 0.05);
-      border: 1px solid rgba(255, 23, 68, 0.15);
-    }
-    .btn-remove {
-      background: none;
-      border: none;
-      color: var(--utp-text-secondary);
-      font-size: 1.3rem;
-      cursor: pointer;
-      padding: 0;
-    }
-    .btn-remove:hover {
-      color: var(--utp-primary);
-    }
-    .bg-danger-opacity {
-      background: rgba(220, 38, 38, 0.1);
-    }
-    .text-red {
-      color: var(--utp-danger);
-    }
-    .criteria-rating-row {
-      background: var(--utp-surface-soft) !important;
-    }
+/* Rejection Callout Box */
+.rejection-callout {
+  background: rgba(220, 38, 38, 0.03);
+  border: 1px solid rgba(220, 38, 38, 0.08);
+  border-left: 4px solid var(--utp-danger);
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.callout-header {
+  color: var(--utp-danger);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.callout-body {
+  color: var(--utp-text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+/* Search input box and icon */
+.search-input-wrapper {
+  position: relative;
+}
+
+.search-input-wrapper .search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--utp-text-secondary);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+/* Disabled input icon safeguard */
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.search-help-link {
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+
+.text-gold {
+  color: var(--utp-warning) !important;
+}
+
+/* Autocomplete Dropdown styling */
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 280px;
+  display: flex;
+  flex-direction: column;
+  background: var(--utp-surface);
+  border: 1px solid var(--utp-border);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.dropdown-scroll-container {
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: 220px;
+}
+
+/* Dropdown list items styling */
+.dropdown-item-custom {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--utp-border-soft);
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  text-align: left;
+}
+
+.dropdown-item-custom:hover {
+  background: var(--utp-surface-soft);
+  border-left-color: var(--utp-primary);
+}
+
+.dropdown-item-custom .text-dark-title {
+  color: #0f172a !important;
+}
+
+.course-type-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--utp-text-secondary);
+  background: rgba(107, 114, 128, 0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(107, 114, 128, 0.1);
+}
+
+.dropdown-footer-link {
+  background: var(--utp-surface-soft) !important;
+  border-top: 1px solid var(--utp-border);
+}
+
+/* Selected option panel card styling */
+.selected-assignment-card {
+  background: rgba(255, 23, 68, 0.03);
+  border: 1px solid rgba(255, 23, 68, 0.12);
+  border-left: 4px solid var(--utp-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.selected-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 23, 68, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.selected-assignment-card .text-dark-title {
+  color: #0f172a !important;
+}
+
+.font-size-md {
+  font-size: 0.95rem;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: var(--utp-text-secondary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.btn-remove:hover {
+  color: var(--utp-primary);
+}
+
+/* Criteria Cards rating layout */
+.criteria-card {
+  background: var(--utp-surface-soft);
+  border: 1px solid var(--utp-border-soft);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.criteria-card:hover {
+  background: var(--utp-surface);
+  border-color: rgba(255, 23, 68, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+}
+
+.criteria-card .text-dark-title {
+  color: #0f172a !important;
+}
+
+/* Privacy anonymous warning card with checkbox layout spacing */
+.privacy-toggle-panel {
+  background: rgba(107, 114, 128, 0.04);
+  border: 1px solid var(--utp-border-soft);
   
+  .form-check-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px; // Generous space between checkbox and text
+  }
+  
+  .form-check-input {
+    width: 18px;
+    height: 18px;
+    margin: 3px 0 0 0 !important; // Align with the top line of text
+    flex-shrink: 0;
+    cursor: pointer;
+    border: 1px solid var(--utp-border);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    
+    &:checked {
+      background-color: var(--utp-primary);
+      border-color: var(--utp-primary);
+    }
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(255, 23, 68, 0.15);
+      border-color: var(--utp-primary);
+    }
+  }
+  
+  .form-check-label {
+    cursor: pointer;
+    user-select: none;
+  }
+}
+
+.privacy-toggle-panel .text-dark-title {
+  color: #0f172a !important;
+}
+
+/* Rules Sidebar styling */
+.rules-card {
+  border-top: 3px solid var(--utp-primary);
+}
+
+.rules-card .text-dark-title {
+  color: #0f172a !important;
+}
+
+.rules-list li {
+  line-height: 1.5;
+}
+
+/* Approval Guide Card styling */
+.approval-guide-card {
+  border-top: 3px solid var(--utp-success);
+}
+
+.approval-guide-card .text-dark-title {
+  color: #0f172a !important;
+}
+
+.approval-list li {
+  line-height: 1.5;
+}
+
+.font-size-sm {
+  font-size: 0.85rem;
+}

@@ -1,7 +1,8 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { StudentService } from '../../../core/services/student.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { StudentDashboardResponse } from '../../../core/models/student.models';
 import { StatusBadgePipe } from '../../../shared/pipes/status-badge.pipe';
 import { LoadingSkeletonComponent } from '../../../shared/components/loading-skeleton/loading-skeleton.component';
@@ -15,8 +16,10 @@ import { LoadingSkeletonComponent } from '../../../shared/components/loading-ske
 })
 export class DashboardComponent implements OnInit {
   private readonly studentService = inject(StudentService);
+  readonly authService = inject(AuthService);
 
   readonly data = signal<StudentDashboardResponse | null>(null);
+  readonly studentName = computed(() => this.authService.currentUser()?.nombres || 'Estudiante');
   readonly isLoading = signal<boolean>(true);
 
   ngOnInit(): void {
